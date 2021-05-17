@@ -1,53 +1,64 @@
-const path = require('path')
-const envPath = path.resolve(process.cwd(), '.env.local')
+const db = require('./db');
+const { performersUp, performersDown } = require('./migrations/performersTable');
+const { familiesUp, familiesDown } = require('./migrations/familiesTable');
+const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
+const { venuesUp, venuesDown } = require('./migrations/venuesTable');
+const { eventsUp, eventsDown } = require('./migrations/eventsTable');
 
-console.log({ envPath })
-
-require('dotenv').config({ path: envPath })
-
-const mysql = require('serverless-mysql')
-
-const db = mysql({
-  config: {
-    host: process.env.MYSQL_HOST,
-    database: process.env.MYSQL_DATABASE,
-    user: process.env.MYSQL_USERNAME,
-    password: process.env.MYSQL_PASSWORD,
-    port: process.env.MYSQL_PORT,
-  },
-})
-
-async function query(q) {
-  try {
-    const results = await db.query(q)
-    await db.end()
-    return results
-  } catch (e) {
-    throw Error(e.message)
-  }
+const up = () => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let status = await performersUp();
+            console.log(status);
+            status = await familiesUp();
+            console.log(status);
+            status = await familiesPerformersUp();
+            console.log(status);
+            status = await venuesUp();
+            console.log(status);
+            status = await eventsUp();
+            console.log(status);
+            return resolve('All tables created.');
+        } catch (err) {
+            return reject(err);
+        }
+    })
+    
 }
 
-// Create "entries" table if doesn't exist
-async function migrate() {
-  try {
-    await query(`
-    CREATE TABLE IF NOT EXISTS entries (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      title TEXT NOT NULL,
-      content TEXT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at 
-        TIMESTAMP 
-        NOT NULL 
-        DEFAULT CURRENT_TIMESTAMP 
-        ON UPDATE CURRENT_TIMESTAMP
-    )
-    `)
-    console.log('migration ran successfully')
-  } catch (e) {
-    console.error('could not run migration, double check your credentials.')
-    process.exit(1)
-  }
+const down = () => {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let status = await familiesPerformersDown();
+            console.log(status);
+            status = await venuesDown();
+            console.log(status);
+            status = await performersDown();
+            console.log(status);
+            status = await familiesDown();
+            console.log(status);
+            status = await eventsDown();
+            console.log(status);
+            return resolve('All tables dropped.')
+        } catch (err) {
+            return reject(err);
+        }
+    })
 }
 
-migrate().then(() => process.exit())
+const migrations = async () => {
+    try {
+        await down();
+        await up();
+        await db.end((err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('All Migrations run successfully');
+        })
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+migrations().then(() => process.exit());
