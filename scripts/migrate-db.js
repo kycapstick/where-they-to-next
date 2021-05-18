@@ -1,4 +1,5 @@
 const db = require('./db');
+const { usersUp, usersDown } = require('./migrations/userTable');
 const { performersUp, performersDown } = require('./migrations/performersTable');
 const { familiesUp, familiesDown } = require('./migrations/familiesTable');
 const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
@@ -8,7 +9,9 @@ const { eventsUp, eventsDown } = require('./migrations/eventsTable');
 const up = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            let status = await performersUp();
+            let status = await usersUp();
+            console.log(status);
+            status = await performersUp();
             console.log(status);
             status = await familiesUp();
             console.log(status);
@@ -29,7 +32,9 @@ const up = () => {
 const down = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            let status = await familiesPerformersDown();
+            let status = await usersDown();
+            console.log(status);
+            status = await familiesPerformersDown();
             console.log(status);
             status = await venuesDown();
             console.log(status);
