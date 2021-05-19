@@ -1,8 +1,8 @@
 import { NextApiHandler } from 'next'
-import { query } from '../../lib/db'
+import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-    const { id } = req.query
+    const { id } = req.query;
     try {
         if (!id) {
             return res.status(400).json({ message: '`id` required' })
@@ -12,7 +12,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
         const results = await query(
             `
-                DELETE FROM entries
+                DELETE FROM performers
                 WHERE id = ?
             `,
             id
