@@ -13,7 +13,7 @@ module.exports.venuesUp = () => {
                             city TEXT NOT NULL,
                             province TEXT NOT NULL,
                             timezone TEXT NOT NULL,
-                            description TEXT NOT NULL,
+                            description TEXT NULL,
                             accent_color TEXT NULL,
                             accessibility_description TEXT NULL
                         )`;
