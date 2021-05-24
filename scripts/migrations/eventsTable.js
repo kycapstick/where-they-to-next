@@ -16,7 +16,9 @@ module.exports.eventsUp = () => {
                             tickets TEXT NULL,
                             tickets_url TEXT NULL,
                             accent_color TEXT NULL,
-                            accessibility_description TEXT NULL
+                            accessibility_description TEXT NULL,
+                            user_id INT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                         )`;
 
         db.query(createEvents, function(err, results, fields) {

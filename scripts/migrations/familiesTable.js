@@ -11,7 +11,9 @@ module.exports.familiesUp = () => {
                             name TEXT NOT NULL,
                             description TEXT NULL,
                             tips TEXT NULL,
-                            accent_color TEXT NULL
+                            accent_color TEXT NULL,
+                            user_id INT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                         )`;
 
         db.query(createFamilies, function(err, results, fields) {

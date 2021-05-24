@@ -1,12 +1,18 @@
 import { NextApiHandler } from 'next'
-import Filter from 'bad-words'
 import { query } from '../../../lib/db'
 
-const filter = new Filter()
+const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    let { id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null } = req.body;
+    let { user_id, id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null } = req.body;
     try {
+        if (!user_id) {
+            return res.status(401).json({ message: `You must be logged in to complete this action`});
+        }
+        const activeUser = await verifyUser(id, user_id, 'events');
+        if (!activeUser) {
+            return res.status(401).json({ message: `You are not authorized to update this entry`});
+        }
         if (!id || !name || !date || !show_time) {
             return res
                 .status(400)
@@ -15,7 +21,7 @@ const handler: NextApiHandler = async (req, res) => {
 
         const results = await query(
             `
-                UPDATE performers
+                UPDATE events
                 SET name = ?, date = ?, show_time = ?, description = ?, tickets = ?, tickets_url = ?, accent_color = ?, accessibility_description = ?
                 WHERE id = ?
             `,

@@ -1,24 +1,28 @@
 import { NextApiHandler } from 'next'
-import Filter from 'bad-words'
 import { query } from '../../../lib/db'
 
-const filter = new Filter()
 
 const handler: NextApiHandler = async (req, res) => {
-    let { name, bio, tips = null, accent_color = "#000000" } = req.body
+    let { user_id, name, bio, tips = null, accent_color = "#000000" } = req.body
     try {
-        if (!name || !bio) {
+        if (req.method !== 'POST') {
+            return res.status(400).json({ message: `This method is not allowed.`})
+        }
+        if (!user_id) {
+            return res.status(401).json({ message: `You must be logged in to complete this task`});
+        }
+        if (!name) {
             return res
                 .status(400)
-                .json({ message: '`name` and `bio` are both required' })
+                .json({ message: '`name` are both required' })
         } 
 
             const results = await query(
             `
-                INSERT INTO performers (name, bio, tips, accent_color)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO performers (user_id, name, bio, tips, accent_color)
+                VALUES (?, ?, ?, ?, ?)
             `,
-            [filter.clean(name), filter.clean(bio), tips, accent_color]
+            [user_id, name, bio, tips, accent_color]
         )
         return res.json(results)
     } catch (e) {

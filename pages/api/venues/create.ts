@@ -1,17 +1,16 @@
 import { NextApiHandler } from 'next'
-const { defaultValues } = require("../../../scripts/utilities");
-import Filter from 'bad-words'
 import { query } from '../../../lib/db'
 
-const filter = new Filter()
-
 const handler: NextApiHandler = async (req, res) => {
-    let { name, address, city, province, timezone } = req.body
-    const accent_color = defaultValues(req.body, 'accent_color');
-    const accessibility_description = defaultValues(req.body, 'accessibility_description');
-    const description = defaultValues(req.body, 'description');
+    let { user_id, name, address, city, province, timezone, accent_color, accessibility_description, description } = req.body
 
     try {
+        if (req.method !== 'POST') {
+            return res.status(400).json({ message: `This method is not allowed.`})
+        }
+        if (!user_id) {
+            return res.status(401).json({ message: `You must be logged in to complete this task`});
+        }
         if (!name || !address || !province || !city || !timezone) {
             return res
                 .status(400)
@@ -20,10 +19,10 @@ const handler: NextApiHandler = async (req, res) => {
 
             const results = await query(
             `
-                INSERT INTO venues (name, address, province, city, timezone, description, accent_color, accessibility_description)
-                VALUES (?, ?, ?, ?, ?, ? , ?, ?)
+                INSERT INTO venues (user_id, name, address, province, city, timezone, description, accent_color, accessibility_description)
+                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?)
             `,
-            [filter.clean(name), filter.clean(address), filter.clean(province), filter.clean(city), filter.clean(timezone), description, accent_color, accessibility_description  ]
+            [user_id, name, address, province, city, timezone, description, accent_color, accessibility_description  ]
         )
         return res.json(results)
     } catch (e) {

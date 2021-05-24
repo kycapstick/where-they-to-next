@@ -9,9 +9,11 @@ module.exports.performersUp = () => {
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             name TEXT NOT NULL,
-                            bio TEXT NOT NULL,
+                            bio TEXT NULL,
                             accent_color TEXT NULL,
-                            tips TEXT NULL
+                            tips TEXT NULL,
+                            user_id INT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                         )`;
 
         db.query(createPerformers, function(err, results, fields) {

@@ -2,8 +2,11 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { name, tips = null, description = null, accent_color = null } = req.body
+    let { user_id, name, tips = null, description = null, accent_color = null } = req.body
     try {
+        if (req.method !== 'POST') {
+            return res.status(400).json({ message: `This method is not allowed.`})
+        }
         if (!name) {
             return res
                 .status(400)
@@ -12,10 +15,10 @@ const handler: NextApiHandler = async (req, res) => {
 
             const results = await query(
             `
-                INSERT INTO families (name, description, tips, accent_color)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO families (user_id, name, description, tips, accent_color)
+                VALUES (?, ?, ?, ?, ?)
             `,
-            [name, description, tips, accent_color]
+            [user_id, name, description, tips, accent_color]
         )
         return res.json(results)
     } catch (e) {

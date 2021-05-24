@@ -1,9 +1,16 @@
 import { NextApiHandler } from 'next'
-const Venue = require('../../controllers/venueController');
+import { query } from "../../lib/db";
 
 const handler: NextApiHandler = async (req, res) => {
     try {
-        const results = await Venue.getAllVenues();
+        if (req.method !== 'GET') {
+            return res.status(401).json({ message: `This method is not allowed`});
+        }
+        const results = await query(
+            `
+                SELECT * FROM venues
+            `,
+        )
         return res.json(results)
     } catch (e) {
         res.status(500).json({ message: e.message })

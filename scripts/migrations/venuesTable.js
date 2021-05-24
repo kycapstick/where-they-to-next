@@ -15,7 +15,9 @@ module.exports.venuesUp = () => {
                             timezone TEXT NOT NULL,
                             description TEXT NULL,
                             accent_color TEXT NULL,
-                            accessibility_description TEXT NULL
+                            accessibility_description TEXT NULL,
+                            user_id INT NOT NULL,
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                         )`;
 
         db.query(createVenues, function(err, results, fields) {

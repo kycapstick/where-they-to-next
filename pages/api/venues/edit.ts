@@ -1,22 +1,27 @@
 import { NextApiHandler } from 'next'
-import Filter from 'bad-words'
 import { query } from '../../../lib/db'
 
-const { defaultValues } = require("../../../scripts/utilities");
-
-const filter = new Filter()
+const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    let { id, name, address, city, province, timezone } = req.body
-    const accent_color = defaultValues(req.body, 'accent_color');
-    const accessibility_description = defaultValues(req.body, 'accessibility_description');
-    const description = defaultValues(req.body, 'description');
+    let { user_id, id, name, address, city, province, timezone, accent_color, accessibility_description, description } = req.body
+
     try {
+        if (req.method !== 'POST') {
+            return res.status(401).json({ message: `This method is not allowed`});
+        }
         if (!id || !name || !address || !province || !city || !timezone) {
             return res
                 .status(400)
                 .json({ message: ' `id`, `name`, `address`, `city`, `province`, and `timezone` are all required' })
         } 
+        if (!user_id) {
+            return res.status(401).json({ message: `You must be logged in to complete this action`});
+        }
+        const activeUser = await verifyUser(id, user_id, 'venues');
+        if (!activeUser) {
+            return res.status(401).json({ message: `You are not authorized to update this entry`});
+        }
 
         const results = await query(
             `
@@ -24,7 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
                 SET name = ?, address = ?, province = ?, city = ?, timezone = ?, description = ?, accent_color = ?, accessibility_description = ?
                 WHERE id = ?
             `,
-            [filter.clean(name), filter.clean(address), filter.clean(province), filter.clean(city), filter.clean(timezone), description, accent_color, accessibility_description, id ]
+            [name, address, province, city, timezone, description, accent_color, accessibility_description, id ]
         )
 
         return res.json(results)

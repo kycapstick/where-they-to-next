@@ -6,9 +6,14 @@ const { venuesUp, venuesDown } = require('./migrations/venuesTable');
 const { eventsUp, eventsDown } = require('./migrations/eventsTable');
 
 // Pivot Tables
-const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
 const { eventsFamiliesUp, eventsFamiliesDown } = require('./migrations/eventsFamiliesTable');
 const { eventsPerformersUp, eventsPerformersDown } = require('./migrations/eventsPerformersTable');
+const { eventsUsersUp, eventsUsersDown } = require('./migrations/eventsUsersTable');
+const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
+const { familiesUsersUp, familiesUsersDown } = require('./migrations/familiesUsersTable');
+const { performersUsersUp, performersUsersDown } = require('./migrations/performersUsersTable');
+const { usersVenuesUp, usersVenuesDown } = require('./migrations/usersVenuesTable');
+
 
 const up = () => {
     return new Promise(async(resolve, reject) => {
@@ -31,6 +36,14 @@ const up = () => {
             console.log(status);
             status = await eventsPerformersUp();
             console.log(status);
+            status = await eventsUsersUp();
+            console.log(status);
+            status = await familiesUsersUp();
+            console.log(status);
+            status = await performersUsersUp();
+            console.log(status);
+            status = await usersVenuesUp();
+            console.log(status);
             return resolve('All tables created.');
         } catch (err) {
             return reject(err);
@@ -48,6 +61,14 @@ const down = () => {
             status = await eventsFamiliesDown();
             console.log(status);
             status = await eventsPerformersDown();
+            console.log(status);
+            status = await eventsUsersDown();
+            console.log(status);
+            status = await familiesUsersDown();
+            console.log(status);
+            status = await performersUsersDown();
+            console.log(status);
+            status = await usersVenuesDown();
             console.log(status);
 
             // Main Tables Down
