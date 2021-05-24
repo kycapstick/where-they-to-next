@@ -12,7 +12,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
         const results = await query(
             `
-                DELETE FROM performers
+                DELETE FROM events
                 WHERE id = ?
             `,
             id

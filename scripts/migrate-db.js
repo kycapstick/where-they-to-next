@@ -2,9 +2,13 @@ const db = require('./db');
 const { usersUp, usersDown } = require('./migrations/userTable');
 const { performersUp, performersDown } = require('./migrations/performersTable');
 const { familiesUp, familiesDown } = require('./migrations/familiesTable');
-const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
 const { venuesUp, venuesDown } = require('./migrations/venuesTable');
 const { eventsUp, eventsDown } = require('./migrations/eventsTable');
+
+// Pivot Tables
+const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
+const { eventsFamiliesUp, eventsFamiliesDown } = require('./migrations/eventsFamiliesTable');
+const { eventsPerformersUp, eventsPerformersDown } = require('./migrations/eventsPerformersTable');
 
 const up = () => {
     return new Promise(async(resolve, reject) => {
@@ -15,11 +19,17 @@ const up = () => {
             console.log(status);
             status = await familiesUp();
             console.log(status);
-            status = await familiesPerformersUp();
-            console.log(status);
             status = await venuesUp();
             console.log(status);
             status = await eventsUp();
+            console.log(status);
+
+            // Pivot Tables Up
+            status = await familiesPerformersUp();
+            console.log(status);
+            status = await eventsFamiliesUp();
+            console.log(status);
+            status = await eventsPerformersUp();
             console.log(status);
             return resolve('All tables created.');
         } catch (err) {
@@ -32,10 +42,15 @@ const up = () => {
 const down = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            let status = await usersDown();
+            // Pivot Tables Down
+            let status = await familiesPerformersDown();
             console.log(status);
-            status = await familiesPerformersDown();
+            status = await eventsFamiliesDown();
             console.log(status);
+            status = await eventsPerformersDown();
+            console.log(status);
+
+            // Main Tables Down
             status = await venuesDown();
             console.log(status);
             status = await performersDown();
@@ -43,6 +58,10 @@ const down = () => {
             status = await familiesDown();
             console.log(status);
             status = await eventsDown();
+            console.log(status);
+            
+            // Users Down
+            status = await usersDown();
             console.log(status);
             return resolve('All tables dropped.')
         } catch (err) {

@@ -11,7 +11,7 @@ module.exports.eventsUp = () => {
                             name TEXT NOT NULL,
                             date TEXT NOT NULL,
                             doors TEXT NULL,
-                            description TEXT NOT NULL,
+                            description TEXT NULL,
                             show_time TEXT NULL,
                             tickets TEXT NULL,
                             tickets_url TEXT NULL,

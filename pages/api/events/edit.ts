@@ -5,9 +5,9 @@ import { query } from '../../../lib/db'
 const filter = new Filter()
 
 const handler: NextApiHandler = async (req, res) => {
-    const { id, name, bio, accent_color = "#000000", tips = null } = req.body
+    let { id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null } = req.body;
     try {
-        if (!id || !name || !bio) {
+        if (!id || !name || !date || !show_time) {
             return res
                 .status(400)
                 .json({ message: '`id`,`name`, and `bio` are all required' })
@@ -16,10 +16,10 @@ const handler: NextApiHandler = async (req, res) => {
         const results = await query(
             `
                 UPDATE performers
-                SET name = ?, bio = ?, accent_color = ?, tips = ?
+                SET name = ?, date = ?, show_time = ?, description = ?, tickets = ?, tickets_url = ?, accent_color = ?, accessibility_description = ?
                 WHERE id = ?
             `,
-            [filter.clean(name), filter.clean(bio), accent_color, tips, id]
+            [name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, id]
         )
 
         return res.json(results)

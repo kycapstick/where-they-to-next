@@ -9,7 +9,8 @@ module.exports.familiesUp = () => {
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             name TEXT NOT NULL,
-                            description TEXT NOT NULL,
+                            description TEXT NULL,
+                            tips TEXT NULL,
                             accent_color TEXT NULL
                         )`;
 

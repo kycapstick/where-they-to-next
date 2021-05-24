@@ -12,7 +12,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
         const results = await query(
             `
-                SELECT * FROM performers
+                SELECT * FROM families
                 WHERE id = ?
             `,
             id
