@@ -4,8 +4,8 @@ function fetcher(url: string) {
     return window.fetch(url).then((res) => res.json())
 }
 
-export function usePerformers() {
-    const { data, error } = useSWR(`/api/performers`, fetcher)
+export function useEntries(route: string) {
+    const { data, error } = useSWR(`/api/${route}`, fetcher)
 
     return {
         entries: data,
@@ -14,6 +14,11 @@ export function usePerformers() {
     }
 }
 
-export function useEntry(id: string) {
-    return useSWR(`/api/get-entry?id=${id}`, fetcher)
+export function useEntry(id: string, route: string) {
+    const { data, error } = useSWR(`/api/${route}/single?id=${id}`, fetcher);
+    return {
+        entry: data,
+        isLoading: !error && !data,
+        isError: error,
+    }
 }
