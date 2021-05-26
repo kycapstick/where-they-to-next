@@ -23,6 +23,9 @@ export default function Profile({ entry }) {
                         user_id={session.id}
                     />
             }
+            <div className="flex">
+                <p>{entry.bio}</p>
+            </div>
         </>
     )
 }
