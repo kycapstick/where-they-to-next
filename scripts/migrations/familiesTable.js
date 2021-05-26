@@ -8,12 +8,14 @@ module.exports.familiesUp = () => {
                             id INT PRIMARY KEY AUTO_INCREMENT,
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            slug varchar(255) NOT NULL,
                             name TEXT NOT NULL,
                             description TEXT NULL,
                             tips TEXT NULL,
                             accent_color TEXT NULL,
                             user_id INT NOT NULL,
-                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                            UNIQUE(slug)
                         )`;
 
         db.query(createFamilies, function(err, results, fields) {

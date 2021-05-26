@@ -6,6 +6,7 @@ module.exports.eventsUp = () => {
 
         let createEvents = `CREATE TABLE IF NOT EXISTS events(
                             id INT PRIMARY KEY AUTO_INCREMENT,
+                            slug varchar(255) NOT NULL,
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             name TEXT NOT NULL,
@@ -18,7 +19,8 @@ module.exports.eventsUp = () => {
                             accent_color TEXT NULL,
                             accessibility_description TEXT NULL,
                             user_id INT NOT NULL,
-                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                            UNIQUE(slug)
                         )`;
 
         db.query(createEvents, function(err, results, fields) {

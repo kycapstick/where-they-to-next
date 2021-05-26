@@ -1,4 +1,5 @@
 import mysql from 'serverless-mysql'
+import { slugify } from '../scripts/utilities';
 
 export const db = mysql({
     config: {
@@ -22,3 +23,33 @@ export async function query(
         throw Error(e.message)
     }
 }
+
+export async function generateSlug( 
+        name: string,
+        route: string
+    ) {
+        return new Promise(async(resolve, reject) => {
+            try {
+                let slug = slugify(name);
+                let unique = false;
+                let results = [];
+                let count = 1;
+                let newSlug = slug;
+                while (!unique) {
+                    results = await db.query(`SELECT * FROM ${route} WHERE slug = ?`, newSlug);
+                    if (!results.length) {
+                        unique = true;
+                    } else {
+                        newSlug = `${slug}-${count}`;
+                        count = count + 1;
+                    }
+                }
+                console.log(newSlug);
+                return resolve(newSlug);
+            } catch(err) {
+                console.log(err);
+                reject();
+            }
+        })
+        
+    }

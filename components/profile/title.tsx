@@ -1,13 +1,42 @@
 import Link from 'next/link'
 import { useSession } from 'next-auth/client'
+import ProfileModal from './modal'
 
-export default function ProfileTitle({ title = null, owner = false, tags = []  }) {
+import ButtonLink from "@/components/button-link";
+import Button from "@/components/button";
+
+export default function ProfileTitle({ title, owner = false, accentColor = '#000000', modal = null, following = false  }) {
     const [ session, loading ] = useSession();
-
     return (
-        <>
-            { title ? <h1>{title}</h1> : null }
-            { owner ? <Link href="/performers/edit">Edit Profile</Link> : null } 
-        </>
+        <div>
+
+            <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                    <h1>{title}</h1>
+                    { modal.type ?
+                        <ProfileModal  
+                            type={ modal.type} 
+                            accentColor={accentColor}
+                            title={modal.title} 
+                            description={modal.description} 
+                            link={modal.tips_link} 
+                        /> 
+                        : 
+                        null
+                    }
+                </div>
+                <div>
+                    { owner ? 
+                        <ButtonLink 
+                            href="/"
+                            accentColor={accentColor}
+                            children="Edit Profile"
+                        /> 
+                        : 
+                        null 
+                    } 
+                </div>
+            </div> 
+        </div>
     )
 }

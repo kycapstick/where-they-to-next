@@ -14,11 +14,18 @@ export function useEntries(route: string) {
     }
 }
 
-export function useEntry(id: string, route: string) {
-    const { data, error } = useSWR(`/api/${route}/single?id=${id}`, fetcher);
+export function useEntry(slug: string, route: string) {
+    const { data, error } = useSWR(`/api/${route}/single?slug=${slug}`, fetcher);
     return {
         entry: data,
         isLoading: !error && !data,
         isError: error,
     }
+}
+
+export function getFollowing(entry_id: string | number, user_id: string | number, route: string) {
+    const { data } = useSWR(`/api/${route}/following?id=${entry_id}&user_id=${user_id}`, fetcher);
+    return {
+        following: data && data[0] ? data[0].id : false
+    };
 }

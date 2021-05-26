@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import cn from 'clsx'
 
-function ButtonLink({ href = '/', className = '', children }) {
+function ButtonLink({ href = '/', className = '', accentColor = "#000", children, }) {
     return (
         <Link href={href}>
             <a
@@ -17,6 +17,9 @@ function ButtonLink({ href = '/', className = '', children }) {
                         [className]: Boolean(className),
                     }
                 )}
+                style={{
+                    backgroundColor: accentColor
+                }}
             >
                 {children}
             </a>

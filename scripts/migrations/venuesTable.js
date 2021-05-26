@@ -8,6 +8,7 @@ module.exports.venuesUp = () => {
                             id INT PRIMARY KEY AUTO_INCREMENT,
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                            slug VARCHAR(255) NOT NULL,
                             name TEXT NOT NULL,
                             address TEXT NOT NULL,
                             city TEXT NOT NULL,
@@ -17,7 +18,8 @@ module.exports.venuesUp = () => {
                             accent_color TEXT NULL,
                             accessibility_description TEXT NULL,
                             user_id INT NOT NULL,
-                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                            UNIQUE(slug)
                         )`;
 
         db.query(createVenues, function(err, results, fields) {

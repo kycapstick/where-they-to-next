@@ -1,5 +1,5 @@
 import { NextApiHandler } from 'next'
-import { query } from '../../../lib/db'
+import { query, generateSlug } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
     let { user_id, name, tips = null, description = null, accent_color = null } = req.body
@@ -12,13 +12,15 @@ const handler: NextApiHandler = async (req, res) => {
                 .status(400)
                 .json({ message: '`name` is required' })
         } 
+        const slug = await generateSlug(name, 'families');
 
-            const results = await query(
+
+        const results = await query(
             `
-                INSERT INTO families (user_id, name, description, tips, accent_color)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO families (user_id, name, description, tips, accent_color, slug)
+                VALUES (?, ?, ?, ?, ?, ?)
             `,
-            [user_id, name, description, tips, accent_color]
+            [user_id, name, description, tips, accent_color, slug]
         )
         return res.json(results)
     } catch (e) {

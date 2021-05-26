@@ -8,6 +8,9 @@ module.exports = {
         extend: {
         colors: {
             'accent-1': '#333',
+            'black': {
+                trans50: 'rgba(0,0,0,0.5)',
+            }
         },
         },
     },

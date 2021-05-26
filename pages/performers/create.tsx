@@ -9,7 +9,7 @@ export default function DashboardPage() {
         <>
             <Nav />
             <Container className="w-full lg:w-2/4">
-                
+                <p>CREATE A PERFORMER</p>
             </Container>
         </>
     )
