@@ -1,26 +1,28 @@
 import Nav from '@/components/nav'
 import Container from '@/components/container'
 import { useSession } from 'next-auth/client'
+import { useState } from 'react';
 
-import { useEntries } from '@/lib/swr-hooks'
+const { uploadImage } = require('../../scripts/image-upload');
 
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
-    const performers = useEntries('performers');
+    const [ errors, setErrors ] = useState([]);
+    const [ uploading, setUploading ] = useState(false);
+    const [ imageUrl, setImageUrl ] = useState('');
     const handleImageUpload = async (e) => {
         if (e.target.files && e.target.files.length) {
-            const formData = new FormData();
-            formData.append("file", e.target.files[0]);
-            formData.append("user_id", `${session.id}`);
+            setUploading(true);
             try {
-                const uploadFile = await fetch('/api/images/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-                const resp = await uploadFile.json();
-                console.log(resp);
-            } catch (err) {
-                console.log(err);
+                const imageUrl = await uploadImage(e.target.files[0], session.id);
+                setImageUrl(imageUrl);
+                setUploading(false);
+
+            } catch(err) {
+                const tempErrors = errors;
+                tempErrors.push(err);
+                setErrors(tempErrors);
+                setUploading(false);
             }
         }
     }
@@ -30,7 +32,15 @@ export default function DashboardPage() {
             <Container className="w-full lg:w-2/4">
                 { session && session.id ?                
                     <form action="">
-                        <input type="file" onChange={handleImageUpload} />
+                        {
+                            imageUrl !== '' 
+                            ?
+                            <img src={ imageUrl } alt="" />
+                            :
+                            null
+                            
+                        }
+                        <input type="file" onChange={handleImageUpload} disabled={uploading} />
                     </form> 
                     : 
                     <p>Loading...</p>

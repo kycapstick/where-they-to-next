@@ -4,7 +4,7 @@ import { query } from '../../../lib/db'
 const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null } = req.body;
+    let { user_id, id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null, image_url = null, image_alt = null } = req.body;
     try {
         if (!user_id) {
             return res.status(401).json({ message: `You must be logged in to complete this action`});
@@ -22,10 +22,10 @@ const handler: NextApiHandler = async (req, res) => {
         const results = await query(
             `
                 UPDATE events
-                SET name = ?, date = ?, show_time = ?, description = ?, tickets = ?, tickets_url = ?, accent_color = ?, accessibility_description = ?
+                SET name = ?, date = ?, show_time = ?, description = ?, tickets = ?, tickets_url = ?, accent_color = ?, accessibility_description = ?, image_url = ?, image_alt = ?
                 WHERE id = ?
             `,
-            [name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, id]
+            [name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, image_url, image_alt, id]
         )
 
         return res.json(results)

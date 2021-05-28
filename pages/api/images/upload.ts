@@ -18,7 +18,7 @@ export default async (req, res) => {
 
     const form = new formidable.IncomingForm();
     form.maxFileSize = 5 * 1024 * 1024;
-    form.parse(req, async(err, fields, files) => {
+    await form.parse(req, async(err, fields, files) => {
         if (err || !fields.user_id) return res.status(500);
         const file = fs.readFileSync(files.file.path);
         s3.upload({

@@ -11,9 +11,10 @@ export default function DashboardPage() {
             <Nav />
             <Container className="w-full lg:w-2/4">
                 <DashboardLists 
-                    title="Performers"
+                    title="Performer"
                     entries={performers.entries}
                     isLoading={performers.isLoading}
+                    route="performers"
                 />
             </Container>
         </>

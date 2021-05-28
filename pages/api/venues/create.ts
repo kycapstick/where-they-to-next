@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import { generateSlug, query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, name, address, city, province, timezone, accent_color, accessibility_description, description } = req.body
+    const { user_id, name, address, city, province, timezone, accent_color = '#000000', accessibility_description = null, description = null, image_url = null, image_alt = null } = req.body
 
     try {
         if (req.method !== 'POST') {
@@ -21,10 +21,10 @@ const handler: NextApiHandler = async (req, res) => {
 
         const results = await query(
             `
-                INSERT INTO venues (user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug)
-                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?, ?)
+                INSERT INTO venues (user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug, image_url, image_alt)
+                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)
             `,
-            [user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug ]
+            [user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug, image_url, image_alt ]
         )
         return res.json(results)
     } catch (e) {

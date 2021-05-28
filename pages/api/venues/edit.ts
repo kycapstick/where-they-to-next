@@ -4,7 +4,7 @@ import { query } from '../../../lib/db'
 const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, id, name, address, city, province, timezone, accent_color, accessibility_description, description } = req.body
+    let { user_id, id, name, address, city, province, timezone, accent_color, accessibility_description = null, description = null, image_url = null, image_alt = null } = req.body
 
     try {
         if (req.method !== 'POST') {
@@ -26,10 +26,10 @@ const handler: NextApiHandler = async (req, res) => {
         const results = await query(
             `
                 UPDATE venues
-                SET name = ?, address = ?, province = ?, city = ?, timezone = ?, description = ?, accent_color = ?, accessibility_description = ?
+                SET name = ?, address = ?, province = ?, city = ?, timezone = ?, description = ?, accent_color = ?, accessibility_description = ?, image_url = ?, image_alt = ?
                 WHERE id = ?
             `,
-            [name, address, province, city, timezone, description, accent_color, accessibility_description, id ]
+            [name, address, province, city, timezone, description, accent_color, accessibility_description, image_url, image_alt, id ]
         )
 
         return res.json(results)

@@ -2,7 +2,7 @@ import { NextApiHandler } from 'next'
 import { generateSlug, query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null } = req.body;
+    let { user_id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null, image_url = null, image_alt = null } = req.body;
     try {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
@@ -20,10 +20,10 @@ const handler: NextApiHandler = async (req, res) => {
 
             const results = await query(
             `
-                INSERT INTO events (user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO events (user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug, image_alt, image_url)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
-            [user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug]
+            [user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug, image_alt, image_url]
         )
         return res.json(results)
     } catch (e) {

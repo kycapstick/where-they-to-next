@@ -4,7 +4,7 @@ import { query } from '../../../lib/db'
 const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    const { user_id, id, name, bio = null, accent_color = "#000000", tips = null } = req.body
+    const { user_id, id, name, bio = null, accent_color = "#000000", tips = null, image_url = null, image_alt = null } = req.body
     try {
         if (req.method !== 'POST') {
             return res.status(401).json({ message: `This method is not allowed`});
@@ -25,10 +25,10 @@ const handler: NextApiHandler = async (req, res) => {
         const results = await query(
             `
                 UPDATE performers
-                SET name = ?, bio = ?, accent_color = ?, tips = ?
+                SET name = ?, bio = ?, accent_color = ?, tips = ?, image_url = ?, image_alt = ?
                 WHERE id = ?
             `,
-            [name, bio, accent_color, tips, id]
+            [name, bio, accent_color, tips, image_url, image_alt, id]
         )
 
         return res.json(results)

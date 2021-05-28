@@ -18,6 +18,8 @@ module.exports.venuesUp = () => {
                             accent_color TEXT NULL,
                             accessibility_description TEXT NULL,
                             user_id INT NOT NULL,
+                            image_url TEXT NULL,
+                            image_alt TEXT NULL,
                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                             UNIQUE(slug)
                         )`;
