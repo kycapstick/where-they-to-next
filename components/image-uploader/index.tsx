@@ -17,6 +17,7 @@ export default function ImageUploader({ user_id, setImage, image }) {
     const handleImageUpload = async (e) => {
         if (e.target.files && e.target.files.length) {
             setUploading(true);
+            setImage(null);
             try {
                 const image = await uploadImage(e.target.files[0], user_id);
                 setImage(image);
