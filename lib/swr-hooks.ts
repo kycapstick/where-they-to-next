@@ -29,3 +29,8 @@ export function getFollowing(entry_id: string | number, user_id: string | number
         following: data && data[0] ? data[0].id : false
     };
 }
+
+export function getCount(user_id: string | number, route: string) {
+    const {data : { count }} = useSWR(`/api/${route}/count?user_id=${user_id}`, fetcher);
+    return count;
+}
