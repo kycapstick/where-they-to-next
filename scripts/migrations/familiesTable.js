@@ -14,8 +14,8 @@ module.exports.familiesUp = () => {
                             tips TEXT NULL,
                             accent_color TEXT NULL,
                             user_id INT NOT NULL,
-                            image_url TEXT NULL,
-                            image_alt TEXT NULL,
+                            image_id INT NULL,
+                            social_links_id INT NULL,
                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                             UNIQUE(slug)
                         )`;
