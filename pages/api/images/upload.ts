@@ -3,6 +3,8 @@ import formidable from 'formidable-serverless';
 import fs from 'fs';
 import { query } from '../../../lib/db'
 
+
+
 export const config = {
     api: {
         bodyParser: false,
@@ -43,14 +45,14 @@ export default async (req, res) => {
                         `,
                         [files.file.name, Location, fields.user_id]
                     )
-                    return resolve(Location)    
+                    return resolve({ id: results.insertId, url: Location })    
                 } catch(error) {
                     console.log(error);
                     return reject(error);
                 }
             });
         });
-        res.status(200).json( {url: response });
+        res.status(200).json( { response });
     } catch(err) {
         console.log(err);
     }

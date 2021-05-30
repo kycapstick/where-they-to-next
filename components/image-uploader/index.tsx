@@ -1,23 +1,25 @@
 import { useState } from 'react';
+import Image from 'next/image'
+
+import { useImage } from '@/lib/swr-hooks'
 
 // Scripts
 const { uploadImage } = require('../../scripts/image-upload');
 
+
 // Components 
 import MediaModal from "./modal";
 
-export default function ImageUploader(props) {
-    const { user_id } = props;
+export default function ImageUploader({ user_id, setImage, image }) {
     const [ uploading, setUploading ] = useState(false);
     const [ openModal, setOpenModal ] = useState(false);
-    const [ imageUrl, setImageUrl ] = useState('');
 
     const handleImageUpload = async (e) => {
         if (e.target.files && e.target.files.length) {
             setUploading(true);
             try {
-                const imageUrl = await uploadImage(e.target.files[0], user_id);
-                setImageUrl(imageUrl);
+                const image = await uploadImage(e.target.files[0], user_id);
+                setImage(image);
                 setUploading(false);
 
             } catch(err) {
@@ -31,9 +33,17 @@ export default function ImageUploader(props) {
     return (
         <>
             {
-                imageUrl !== '' 
+                image && image.url 
                 ?
-                <img src={ imageUrl } alt="" />
+                <Image 
+                    src={ image.url } 
+                    alt=""
+                    height={ 500 }
+                    width={ 500 }
+                    layout="responsive"
+                    objectFit="contain"
+                    objectPosition="center"
+                />
                 :
                 null
             }
@@ -45,6 +55,8 @@ export default function ImageUploader(props) {
                     open={openModal}
                     toggleModal={handleModalToggle}
                     user_id={user_id}
+                    setImage={setImage}
+                    setOpenModal={setOpenModal}
                 />
                 : 
                 <button

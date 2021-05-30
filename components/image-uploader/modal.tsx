@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import ImageEditor from './edit-image';
 
-export default function MediaModal({ open:boolean  = false, toggleModal, user_id }) {    
+export default function MediaModal({ open:boolean  = false, toggleModal, user_id, setImage, setOpenModal }) {    
     const [ images, setImages ] = useState([]);
     const [ editImage, setEditImage ] = useState(false);
     const [ page, setPage ] = useState(0);
@@ -61,6 +61,8 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
                                 !loading && editImage &&
                                 <ImageEditor
                                     image={editImage}
+                                    setImage={setImage}
+                                    setOpenModal={setOpenModal }
                                 />
                             }
                             {
@@ -77,8 +79,11 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
                                                         <Image 
                                                             src={decodeURI(image.url)}
                                                             alt={image.alt}
-                                                            width={500}
-                                                            height={500}
+                                                            width={200}
+                                                            height={200}
+                                                            layout="intrinsic"
+                                                            objectFit="contain"
+                                                            objectPosition="center"
                                                         />
                                                     </a>
                                                 </li>

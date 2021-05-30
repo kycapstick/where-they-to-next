@@ -11,7 +11,7 @@ import ImageUploader from '@/components/image-uploader';
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-
+    const [ image, setImage ] = useState(null);
 
     return (
         <>
@@ -21,6 +21,8 @@ export default function DashboardPage() {
                     <form action="">
                         <ImageUploader 
                             user_id={session.id ? session.id : null }
+                            image={image}
+                            setImage={ setImage }
                         />
                     </form> 
                     : 

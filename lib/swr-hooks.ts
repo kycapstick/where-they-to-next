@@ -23,6 +23,15 @@ export function useEntry(slug: string, route: string) {
     }
 }
 
+export function useImage(id: string | number) {
+    const { data, error } = useSWR(`/api/images/single?id=${id}`, fetcher);
+    return {
+        entry: data,
+        isLoading: !error && !data,
+        isError: error,
+    }
+}
+
 export function getFollowing(entry_id: string | number, user_id: string | number, route: string) {
     const { data } = useSWR(`/api/${route}/following?id=${entry_id}&user_id=${user_id}`, fetcher);
     return {

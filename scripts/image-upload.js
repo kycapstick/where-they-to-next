@@ -8,8 +8,8 @@ module.exports.uploadImage = (file, user_id) => {
                 method: 'POST',
                 body: formData
             });
-            const { url } = await uploadFile.json();
-            return resolve(url);
+            const { response } = await uploadFile.json();
+            return resolve(response);
         } catch (err) {
             console.log(err);
             return reject(err);
