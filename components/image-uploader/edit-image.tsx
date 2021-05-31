@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import { useState, useEffect } from 'react';
 
+// Components 
+import Textarea from '@/components/textarea';
+
 export default function ImageUploader({ image, setImage, setOpenModal }) {
     const [ description, setDescription ] = useState();
     const updateImageAlt = () => {
@@ -29,10 +32,6 @@ export default function ImageUploader({ image, setImage, setOpenModal }) {
         setOpenModal(false);
     }
 
-    const handleInput = (e) => {
-        e.preventDefault();
-        setDescription(e.target.value);
-    }
     useEffect(() => {
         const newDesc = image.alt ? image.alt : '';
         setDescription(newDesc);
@@ -48,15 +47,12 @@ export default function ImageUploader({ image, setImage, setOpenModal }) {
                 objectPosition="center"
             />
             <div>
-                <label htmlFor="image_alt">Description</label>
-                <textarea 
-                    className="border-black border-2 block w-full" 
-                    id="image_alt" 
+                <Textarea 
                     name="image_alt"
-                    onChange={handleInput}
+                    onChange={setDescription}
                     value={description}
-                >
-                </textarea>
+                    label="Description"
+                />
                 <button
                     role="button"
                     onClick={handleImageSelection}

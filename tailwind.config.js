@@ -1,3 +1,5 @@
+const { breakpoints, spacing } = require("./scripts/constants");
+
 module.exports = {
     future: {
         removeDeprecatedGapUtilities: true,
@@ -14,6 +16,7 @@ module.exports = {
         },
         },
     },
+    spacing: spacing,
     variants: {},
     plugins: [],
 }
