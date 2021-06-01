@@ -7,7 +7,7 @@ export default function TextareaInput({ name, label, value, onChange, helperText
         <div className="flex-col flex-grow">  
             <label htmlFor={name}>{ label }</label>
             <textarea 
-                    className="border-black border-2 block w-full" 
+                    className="border-black border-b-2 block w-full" 
                     id={name} 
                     name={name}
                     onChange={handleChange}

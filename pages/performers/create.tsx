@@ -6,13 +6,19 @@ import Nav from '@/components/nav'
 import Container from '@/components/container'
 import ImageUploader from '@/components/image-uploader';
 import TextInput from '@/components/text-input';
+import Textarea from '@/components/textarea';
+import Autocomplete from '@/components/autocomplete';
 
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
     const [ image, setImage ] = useState(null);
     const [ name, setName ] = useState('');
-
+    const [ bio, setBio ] = useState('');
+    const [ family, setFamily ] = useState([]) 
+    const handleSelection = (value) => {
+        
+    }
     return (
         <>
             <Nav />
@@ -21,7 +27,7 @@ export default function DashboardPage() {
                     <>
                         <h1 className="text-center text-3xl my-3">Create a Performer Profile</h1>                
                         <form action="">
-                            <div className="flex py-6">
+                            <div className="py-6">
                                 <TextInput 
                                     name="name"
                                     label="Name"
@@ -29,10 +35,25 @@ export default function DashboardPage() {
                                     onChange={ setName }
                                 />
                             </div>
+                            <div className="py-6">
+                                <Textarea 
+                                    name="bio"
+                                    label="Bio"
+                                    value={bio}
+                                    onChange={setBio}
+                                />
+                            </div>
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
                                 image={image}
                                 setImage={ setImage }
+                            />
+                            <Autocomplete 
+                                name="family"
+                                label="Family"
+                                type="families"
+                                selections={family}
+                                makeSelection={setFamily}
                             />
                         </form>
                     </> 
