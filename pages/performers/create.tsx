@@ -8,6 +8,7 @@ import ImageUploader from '@/components/image-uploader';
 import TextInput from '@/components/text-input';
 import Textarea from '@/components/textarea';
 import Autocomplete from '@/components/autocomplete';
+import Tags from '@/components/tags';
 
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
@@ -16,9 +17,7 @@ export default function DashboardPage() {
     const [ name, setName ] = useState('');
     const [ bio, setBio ] = useState('');
     const [ family, setFamily ] = useState([]) 
-    const handleSelection = (value) => {
-        
-    }
+    const [ types, setTypes ] = useState([]);
     return (
         <>
             <Nav />
@@ -54,6 +53,13 @@ export default function DashboardPage() {
                                 type="families"
                                 selections={family}
                                 makeSelection={setFamily}
+                            />
+                            <Tags 
+                                name="tags"
+                                label="Add performer tags"
+                                type="performer_types"
+                                selections={types}
+                                makeSelection={setTypes}
                             />
                         </form>
                     </> 

@@ -7,7 +7,8 @@ function Autocomplete({
     type,
     selections,
     label,
-    name
+    name,
+    onKeypress = () => {}
 }) {
     const [ value, setValue] = useState('');
     const [ options, setOptions ] = useState([]);
@@ -29,7 +30,7 @@ function Autocomplete({
                 } catch(err) {
                     setLoading(false)
                 }   
-            }, 2000)
+            }, 1000)
         } 
     }
 
@@ -39,6 +40,7 @@ function Autocomplete({
             return;
         }
         makeSelection([...selections, { name: e.target.dataset.name, id: e.target.dataset.id}]);
+        setOptions([]);
     }
 
 
@@ -46,9 +48,9 @@ function Autocomplete({
         e.preventDefault();
     
         const updatedSelections = selections.filter((selection) => selection.id !== e.target.dataset.id);
-        console.log(updatedSelections);
         makeSelection(updatedSelections);
     }
+
     return (
         <>
             {
@@ -66,7 +68,9 @@ function Autocomplete({
                 label={label}
                 value={value}
                 onChange={handleChange}
+                onBlur={() => setOptions([])}
                 disabled={loading}
+                onKeypress={onKeypress}
             />
             {
                 options.length > 0 &&
