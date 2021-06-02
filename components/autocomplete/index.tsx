@@ -46,7 +46,6 @@ function Autocomplete({
 
     const removeItem = (e) => {
         e.preventDefault();
-    
         const updatedSelections = selections.filter((selection) => selection.id !== e.target.dataset.id);
         makeSelection(updatedSelections);
     }
