@@ -1,4 +1,4 @@
-export default function TextInput({ name, label, value, onChange, onBlur = () => {}, onKeypress= () => {}, helperText = null, error = false, disabled = false }) {
+export default function TextInput({ name, label, value, onChange, onBlur = () => {}, onKeypress= (e) => {}, helperText = null, error = false, disabled = false }) {
     const handleChange = (e) => {
         e.preventDefault();
         onChange(e.target.value);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Input from '@/components/text-input';
+import Families from './families';
 
 function Autocomplete({
     makeSelection,
@@ -8,7 +9,7 @@ function Autocomplete({
     selections,
     label,
     name,
-    onKeypress = () => {}
+    onKeypress = function(e) { }
 }) {
     const [ value, setValue] = useState('');
     const [ options, setOptions ] = useState([]);
@@ -53,14 +54,10 @@ function Autocomplete({
     return (
         <>
             {
-                selections.length > 0 &&
-                <ul>
-                    { 
-                        selections.map((selection) => (
-                            <li key={selection.id}>{selection.name}<button data-id={selection.id} onClick={removeItem}>remove</button></li>
-                        ))
-                    }
-                </ul>
+                type === 'families' &&
+                <Families 
+                    entries={selections}
+                />
             }
             <Input
                 name={name}

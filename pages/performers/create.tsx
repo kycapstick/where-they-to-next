@@ -18,20 +18,69 @@ export default function DashboardPage() {
     const [ bio, setBio ] = useState('');
     const [ family, setFamily ] = useState([]) 
     const [ types, setTypes ] = useState([]);
+
+    const submitForm = async() => {
+        try {
+            const response = await fetch(`/api/performers/create`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    name, 
+                    bio,
+                    family,
+                    types
+                })
+            })
+            const result = await response.json();
+            console.log(result);
+        } catch(err) {
+            
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const requiredFields = [{name: 'name', value: name }];
+        const checkedFields = requiredFields.filter((field) => !field.value || field.value === '');
+        if (checkedFields.length > 0) {
+            return setErrors(checkedFields);
+        }
+        submitForm();
+    }
+
+    const checkErrors = (e) => {
+        if (errors.length > 0) {
+            const updatedErrors = errors.filter((error) => error.name !== e.target.name);
+            setErrors(updatedErrors);
+        }
+    }
+
     return (
         <>
             <Nav />
             <Container className="w-full lg:w-2/4">
+                { 
+                    errors.length > 0 && 
+                    <>
+                        <h2>Warning!</h2>
+                        <p>This form includes the following <span className="color-red">{errors.length}</span> {errors.length > 1 ? 'errors' : 'error' }</p>
+                        <ul>
+                            {errors.map((error, index) => (
+                                <li key={index}><a href={`#${error.name}`}>The {error.name} field is required.</a></li>
+                            ))}
+                        </ul>
+                    </>
+                }
                 { session && session.id ?
                     <>
                         <h1 className="text-center text-3xl my-3">Create a Performer Profile</h1>                
-                        <form action="">
+                        <form action="" onSubmit={handleSubmit}>
                             <div className="py-6">
                                 <TextInput 
                                     name="name"
                                     label="Name"
                                     value={name}
                                     onChange={ setName }
+                                    onKeypress={ checkErrors }
                                 />
                             </div>
                             <div className="py-6">
@@ -61,6 +110,7 @@ export default function DashboardPage() {
                                 selections={types}
                                 makeSelection={setTypes}
                             />
+                            <input type="submit" value="Create Performer" />
                         </form>
                     </> 
                     : 
