@@ -1,5 +1,4 @@
 export default function Families({ entries }) {
-    console.log(entries)
     return (
         <>
             <h2 className="text-center">Current Families</h2>

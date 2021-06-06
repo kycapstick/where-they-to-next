@@ -25,7 +25,6 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
         try {
             const resp = await window.fetch(`/api/images?user_id=${user_id}`);
             const { results } = await resp.json();
-            console.log(results);
             if (results.length) {
                 setImages(results);
                 setLoading(false)

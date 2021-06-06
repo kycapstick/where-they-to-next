@@ -44,7 +44,6 @@ export async function generateSlug(
                         count = count + 1;
                     }
                 }
-                console.log(newSlug);
                 return resolve(newSlug);
             } catch(err) {
                 console.log(err);

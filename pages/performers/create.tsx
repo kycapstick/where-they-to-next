@@ -9,6 +9,8 @@ import TextInput from '@/components/text-input';
 import Textarea from '@/components/textarea';
 import Autocomplete from '@/components/autocomplete';
 import Tags from '@/components/tags';
+import ColorPicker from '@/components/color-picker';
+import Tips from '@/components/tips-input';
 
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
@@ -18,6 +20,9 @@ export default function DashboardPage() {
     const [ bio, setBio ] = useState('');
     const [ family, setFamily ] = useState([]) 
     const [ types, setTypes ] = useState([]);
+    const [ color, setColor ] = useState('#000000');
+    const [ tips, setTips ] = useState('');
+    const [ tipsLink, setTipsLink ] = useState('');
 
     const submitForm = async() => {
         try {
@@ -109,6 +114,18 @@ export default function DashboardPage() {
                                 type="performer_types"
                                 selections={types}
                                 makeSelection={setTypes}
+                            />
+                            <ColorPicker 
+                                value={color}
+                                setValue={setColor}
+                                errors={errors}
+                                setErrors={setErrors}
+                            />
+                            <Tips 
+                                tips={tips}
+                                tipsLink={tipsLink}
+                                setTips={setTips}
+                                setTipsLink={setTipsLink}
                             />
                             <input type="submit" value="Create Performer" />
                         </form>

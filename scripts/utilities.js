@@ -9,3 +9,10 @@ export function slugify(string, separator = "-") {
         .replace(/\s+/g, separator);
 }
 
+export function checkForErrors(errors, name) {
+    return errors.filter((error) => error.name === name).length <= 0;
+}
+
+export function clearErrors(errors, name) {
+    return errors.filter((error) => error.name !== name);
+}

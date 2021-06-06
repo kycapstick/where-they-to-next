@@ -4,8 +4,6 @@ import { getSession } from 'next-auth/client'
 
 const handler: NextApiHandler = async (req, res) => {
     let { id, description } = JSON.parse(req.body);
-    console.log(req.body);
-    console.log(description);
     try {
         const session = await getSession({ req });
         if (!session || !session.id) {

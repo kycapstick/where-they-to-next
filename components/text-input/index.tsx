@@ -13,8 +13,6 @@ export default function TextInput({ name, label, value, onChange, onBlur = () =>
             { 
                 error && <p className="text-red">This field is required.</p>
             }
-
-
         </div>
     )
 }
