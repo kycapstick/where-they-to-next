@@ -12,6 +12,7 @@ module.exports.familiesUp = () => {
                             name TEXT NOT NULL,
                             description TEXT NULL,
                             tips TEXT NULL,
+                            tips_link TEXT NULL,
                             accent_color TEXT NULL,
                             user_id INT NOT NULL,
                             image_id INT NULL,

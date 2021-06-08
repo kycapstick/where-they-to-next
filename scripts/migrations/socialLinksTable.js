@@ -13,6 +13,7 @@ module.exports.socialLinksUp = () => {
                             twitch TEXT NULL,
                             twitter TEXT NULL,
                             website TEXT NULL,
+                            youtube TEXT NULL,
                             user_id INT NOT NULL,
                             FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
                         )`;

@@ -12,6 +12,7 @@ export default function TextareaInput({ name, label, value, onChange, helperText
                     name={name}
                     onChange={handleChange}
                     value={value}
+                    rows={10}
             >
             </textarea>
             {

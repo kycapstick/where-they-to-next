@@ -11,6 +11,7 @@ import Autocomplete from '@/components/autocomplete';
 import Tags from '@/components/tags';
 import ColorPicker from '@/components/color-picker';
 import Tips from '@/components/tips-input';
+import SocialLinks from '@/components/social-links';
 
 export default function DashboardPage() {
     const [ session, loading ] = useSession();
@@ -23,6 +24,15 @@ export default function DashboardPage() {
     const [ color, setColor ] = useState('#000000');
     const [ tips, setTips ] = useState('');
     const [ tipsLink, setTipsLink ] = useState('');
+
+    // Social Links
+    const [ facebook, setFacebook ] = useState('');
+    const [ instagram, setInstagram ] = useState('');
+    const [ tiktok, setTiktok ] = useState('');
+    const [ twitch, setTwitch ] = useState('');
+    const [ twitter, setTwitter ] = useState('');
+    const [ website, setWebsite ] = useState('');
+    const [ youtube, setYouTube ] = useState('');
 
     const submitForm = async() => {
         try {
@@ -127,7 +137,23 @@ export default function DashboardPage() {
                                 setTips={setTips}
                                 setTipsLink={setTipsLink}
                             />
-                            <input type="submit" value="Create Performer" />
+                            <SocialLinks 
+                                facebook={facebook}
+                                setFacebook={setFacebook}
+                                instagram={instagram}
+                                setInstagram={setInstagram}
+                                tiktok={tiktok}
+                                setTiktok={setTiktok}
+                                twitch={twitch}
+                                setTwitch={setTwitch}
+                                twitter={twitter}
+                                setTwitter={setTwitter}
+                                website={website}
+                                setWebsite={setWebsite}
+                                youtube={youtube}
+                                setYoutube={setYouTube}
+                            />
+                            <input type="submit" value="Create Performer" className="border-2 px-6 py-4" style={{ borderColor: color }}/>
                         </form>
                     </> 
                     : 

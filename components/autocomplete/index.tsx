@@ -42,6 +42,7 @@ function Autocomplete({
         }
         makeSelection([...selections, { name: e.target.dataset.name, id: e.target.dataset.id}]);
         setOptions([]);
+        setValue('');
     }
 
 
@@ -57,6 +58,7 @@ function Autocomplete({
                 type === 'families' &&
                 <Families 
                     entries={selections}
+                    removeItem={removeItem}
                 />
             }
             <Input

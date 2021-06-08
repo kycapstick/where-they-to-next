@@ -13,6 +13,7 @@ module.exports.performersUp = () => {
                             bio TEXT NULL,
                             accent_color TEXT NULL,
                             tips TEXT NULL,
+                            tips_link TEXT NULL,
                             user_id INT NOT NULL,
                             image_id INT NULL,
                             social_links_id INT NULL,
