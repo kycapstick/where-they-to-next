@@ -13,7 +13,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
         const results = await query(
             `
-                SELECT * FROM socialLinks
+                SELECT * FROM social_links
                 WHERE user_id = ${session.id}
             `,
         )

@@ -9,6 +9,7 @@ export default function DashboardPage() {
     const router = useRouter();
     const { slug } = router.query;
     const { entry, isLoading } = useEntry(`${slug}`, 'performers');
+    console.log(entry);
     return (
         <>
             <Nav />

@@ -4,7 +4,7 @@ const db = require('../db');
 module.exports.socialLinksUp = () => {
     return new Promise((resolve, reject) => {
 
-        let createSocialLinks = `CREATE TABLE IF NOT EXISTS socialLinks(
+        let createSocialLinks = `CREATE TABLE IF NOT EXISTS social_links(
                             id INT PRIMARY KEY AUTO_INCREMENT,
                             name TEXT NOT NULL,
                             facebook TEXT NULL,

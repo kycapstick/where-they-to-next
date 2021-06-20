@@ -22,8 +22,14 @@ export default function Tags({ name, label, type, selections, makeSelection}) {
                 
             }
         })
-        
     }
+
+    const removeItem = (e) => {
+        e.preventDefault();
+        const updatedSelections = selections.filter((selection) => selection.id !== e.target.dataset.id);
+        makeSelection(updatedSelections);
+    }
+
     return (
         <> 
             <Autocomplete 
@@ -39,7 +45,7 @@ export default function Tags({ name, label, type, selections, makeSelection}) {
                 <ul>
                     {
                         selections.map((selection, index) => (
-                            <li key={index}>{`#${selection.name}`}</li>
+                            <li key={index}>{`#${selection.name}`} <button role="button" className="ml-2" data-id={selection.id} onClick={ removeItem }>remove</button></li>
                         ))
                     }
                 </ul>

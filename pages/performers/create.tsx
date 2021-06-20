@@ -26,6 +26,7 @@ export default function DashboardPage() {
     const [ tipsLink, setTipsLink ] = useState('');
 
     // Social Links
+    const [socialLinksId, setSocialLinksId ] = useState(null);
     const [ facebook, setFacebook ] = useState('');
     const [ instagram, setInstagram ] = useState('');
     const [ tiktok, setTiktok ] = useState('');
@@ -34,21 +35,122 @@ export default function DashboardPage() {
     const [ website, setWebsite ] = useState('');
     const [ youtube, setYouTube ] = useState('');
 
-    const submitForm = async() => {
+    const createPerformerTypesRelationships = async(performerId) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                await Promise.all(types.map(async(type) => {
+                    const response = await fetch(`/api/performers_performer_types/create`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            performerTypeId: type.id,
+                            performerId
+                        })
+                    })
+                    const result = await response.json();
+                    return type;
+                }))
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        });
+    }
+
+    const createFamilyRelationships = async(performerId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await Promise.all(family.map(async(family) => {
+                    const response = await fetch(`/api/family_performers/create`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            familyId: family.id,
+                            performerId,
+                        })
+                    })
+                    const result = await response.json();
+                    return family;
+                }));
+                return resolve(true);
+            } catch (err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
+        
+    }
+
+    const createPerformer = async(socials) => {
         try {
             const response = await fetch(`/api/performers/create`, {
                 method: 'POST',
                 body: JSON.stringify({
                     name, 
                     bio,
-                    family,
-                    types
+                    tips,
+                    tipsLink,
+                    image: image && image.id ? image.id : null,
+                    color,
+                    socials
                 })
             })
             const result = await response.json();
-            console.log(result);
+            const { insertId } = result;
+            if (insertId) {
+                if (family && family.length > 0) {
+                    await createFamilyRelationships(insertId);
+                }
+                if (types && types.length > 0) {
+                    await createPerformerTypesRelationships(insertId);
+                }
+            }
+
         } catch(err) {
-            
+            console.log(err);
+        }
+    }
+
+    const createSocialLinksId = () => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const response = await fetch(`/api/social_links/create`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name,
+                        facebook,
+                        instagram,
+                        tiktok, 
+                        twitch,
+                        twitter,
+                        website,
+                        youtube
+                    })
+                })
+                const result = await response.json();
+                const { insertId } = result;
+                if (insertId) {
+                    setSocialLinksId(insertId);
+                    resolve(insertId);
+                    return;
+                }
+                reject('Something went wrong')
+                return;
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
+    }
+
+    const submitForm = async() => {
+        try {
+            let socials = socialLinksId;
+            if (!socialLinksId) {
+                socials = await createSocialLinksId();
+            }
+            createPerformer(socials);
+        } catch(err) {
+            console.log(err)
         }
     }
 
@@ -152,6 +254,8 @@ export default function DashboardPage() {
                                 setWebsite={setWebsite}
                                 youtube={youtube}
                                 setYoutube={setYouTube}
+                                socialLinksId={socialLinksId}
+                                setSocialLinksId={setSocialLinksId}
                             />
                             <input type="submit" value="Create Performer" className="border-2 px-6 py-4" style={{ borderColor: color }}/>
                         </form>

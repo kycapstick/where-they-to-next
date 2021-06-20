@@ -27,8 +27,8 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
             const { results } = await resp.json();
             if (results.length) {
                 setImages(results);
-                setLoading(false)
             }
+            setLoading(false)
         } catch(err) {
             console.log(err);
         }
@@ -65,7 +65,7 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
                                 />
                             }
                             {
-                                !loading && images.length && !editImage
+                                !loading && images.length > 0 && !editImage
                                 && 
                                 <ul className="flex">
                                     {
