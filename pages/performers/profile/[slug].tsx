@@ -9,11 +9,10 @@ export default function DashboardPage() {
     const router = useRouter();
     const { slug } = router.query;
     const { entry, isLoading } = useEntry(`${slug}`, 'performers');
-    console.log(entry);
     return (
         <>
             <Nav />
-            <Container className="w-full lg:w-2/4">
+            <Container className="w-full">
             { entry && entry[0] && !isLoading &&
                 <Profile 
                     entry={entry[0]} 

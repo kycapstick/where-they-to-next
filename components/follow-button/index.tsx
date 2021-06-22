@@ -7,6 +7,7 @@ function FollowButton({
     user_id,
     route
 }) {
+    const [ hover, setHover ] = useState(false);
     const [ followingId, setFollowingId ] = useState(false);
     const checkFollowing = async () => {
         if (user_id && entry_id) {
@@ -39,18 +40,13 @@ function FollowButton({
     }, [])
     return (
         <button
-            className={cn(
-                'bg-black',
-                'text-white',
-                'p-2',
-                'rounded',
-                'uppercase',
-                'text-sm',
-                'font-bold',
-            )}
-            style={{ backgroundColor: accentColor}}
+            className={`${hover ? 'text-white border-white' : ''} py-5 px-16 mb-4 text-center border-2 border-black relative font-bold paragraph group transition-all duration-7`}
+            style={{ backgroundColor: hover ? accentColor : 'white' }}
             onClick={ !followingId ? () => handleFollow() : () => handleUnfollow()  }
+            onMouseEnter={ () => setHover(true)}
+            onMouseLeave={ () => setHover(false)}
         >
+            <span className="w-full h-full absolute inset-0 -z-1 border-2 transform translate-y-3 translate-x-3 group-hover:-translate-x-3 group-hover:-translate-y-3 transition-transform duration-7" style={{ borderColor: accentColor}}></span>
             {followingId ? 'Unfollow' : 'Follow' }
         </button>
     )
