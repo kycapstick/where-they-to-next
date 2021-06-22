@@ -6,13 +6,10 @@ export default function EditButton({ href, accentColor = '#000000' }) {
         <Link
             href={href}
         >
-            <a className="flex items-center p-4 group paragraph" style={{ color: accentColor }}>
+            <a className="flex items-center py-4 group h1 ml-8" style={{ color: accentColor }}>
                 <DynamicIcon 
                     type="edit"
                 />
-                <span className="block w-full ml-2 ">
-                    edit profile
-                </span>
             </a>
         </Link>
     )

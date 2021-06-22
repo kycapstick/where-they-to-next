@@ -13,7 +13,7 @@ module.exports = plugin(function({ addBase }) {
         },
         {
             className: 'h1',
-            max: '52',
+            max: '65',
             min: '40',
             fontWeight: 700,
             lineHeight: '1.15',

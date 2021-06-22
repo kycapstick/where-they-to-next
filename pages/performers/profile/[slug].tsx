@@ -12,7 +12,7 @@ export default function DashboardPage() {
     return (
         <>
             <Nav />
-            <Container className="w-full">
+            <Container>
             { entry && entry[0] && !isLoading &&
                 <Profile 
                     entry={entry[0]} 

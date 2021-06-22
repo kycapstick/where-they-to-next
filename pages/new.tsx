@@ -6,7 +6,7 @@ export default function NewEntryPage() {
     return (
         <>
             <Nav title="New" />
-            <Container className="w-full">
+            <Container>
                 <EntryForm />
             </Container>
         </>

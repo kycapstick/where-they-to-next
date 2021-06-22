@@ -1,19 +1,16 @@
 import { useSession } from 'next-auth/client'
 import ProfileModal from './modal'
-
-import ButtonLink from "@/components/button-link";
 import EditButton from "@/components/buttons/edit";
 
-export default function ProfileTitle({ title, types, owner = false, accentColor = '#000000', modal, following = false  }) {
+export default function ProfileTitle({ title, types, accentColor = '#000000', modal, owner = false, following = false  }) {
     const [ session, loading ] = useSession();
-    console.log(types);
     return (
         <div>
 
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     <h1 className="h1">{title}</h1>
-                    { modal && modal.type ?
+                    { modal && modal.type && !owner ?
                         <ProfileModal  
                             type={ modal.type} 
                             accentColor={accentColor}
@@ -24,17 +21,14 @@ export default function ProfileTitle({ title, types, owner = false, accentColor 
                         : 
                         null
                     }
-                </div>
-                <div>
-                    { owner ? 
+                    { owner && 
                         <EditButton 
                             href="/"
                             accentColor={accentColor}
-                        /> 
-                        : 
-                        null 
-                    } 
+                        />  
+                    }
                 </div>
+                
             </div> 
             {
                 types && types.length > 0 &&

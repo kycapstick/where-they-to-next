@@ -10,6 +10,9 @@ module.exports = {
         extend: {
             colors: {
                 'accent-1': '#333',
+                grey: {
+                    faint: 'rgba(196,196,196,0.1)'
+                }
             },
             inset: spacing,
             transitionProperty: {
@@ -28,5 +31,10 @@ module.exports = {
     plugins: [
         require('./plugins/icon'),
         require('./plugins/typography'),
+        require('./plugins/container')
     ],
+    corePlugins: {
+        // Removes the core tailwind class of container as it doesn't work for what we need.
+        container: false
+    }
 }

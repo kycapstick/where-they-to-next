@@ -9,7 +9,7 @@ export default function DashboardPage() {
     return (
         <>
             <Nav />
-            <Container className="w-full">
+            <Container>
                 <DashboardLists 
                     title="Performer"
                     entries={performers.entries}

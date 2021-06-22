@@ -7,9 +7,9 @@ export default function ProfileModal({ type, title, description = null, link = n
     const [open, setOpen ] = useState(false);
     return (
         <> 
-            <button className="px-4 relative h1 ml-4" style={{ color: accentColor}} aria-label={title} onClick={(e) => { e.preventDefault(); setOpen(true) }}>
+            <button className="px-4 relative h1 ml-8" style={{ color: accentColor}} aria-label={title} onClick={(e) => { e.preventDefault(); setOpen(true) }}>
                 <DynamicIcon 
-                    type="filter"
+                    type="tips"
                     xl={true}
                 />
             </button>

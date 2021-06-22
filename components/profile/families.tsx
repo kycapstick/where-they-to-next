@@ -5,9 +5,9 @@ import Link from 'next/link'
 export default function Families({ families, accentColor }) {
     return (
         <>
-            <div className="flex items-center">
-                <div className="paragraph mr-2" style={{ color: accentColor }}>
-                    <DynamicIcon type="family" />
+            <div className="flex">
+                <div className="mt-2 paragraph mr-4" style={{ color: accentColor }}>
+                    <DynamicIcon type="family" large={true} />
                 </div>
                 <ul>
                     {
@@ -16,7 +16,7 @@ export default function Families({ families, accentColor }) {
                                 <Link
                                     href={`/families/profile/${family.slug}`}
                                 >
-                                    <a className="underline p-2 block hover:no-underline">{family.name}</a>
+                                    <a className="p-2 block paragraph">{family.name}</a>
                                 </Link>
                             </li>
                         ))

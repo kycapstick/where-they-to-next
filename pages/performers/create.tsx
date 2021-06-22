@@ -174,7 +174,7 @@ export default function DashboardPage() {
     return (
         <>
             <Nav />
-            <Container className="w-full lg:w-2/4">
+            <Container className="">
                 { 
                     errors.length > 0 && 
                     <>
