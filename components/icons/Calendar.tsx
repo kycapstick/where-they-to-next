@@ -1,0 +1,5 @@
+export default function Calendar() {
+    return (
+        <g transform="matrix(1,0,0,1,0,0)"><path d="M11.500 17.501 A6.000 6.000 0 1 0 23.500 17.501 A6.000 6.000 0 1 0 11.500 17.501 Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path><path d="M19.5 17.501L17.5 17.501 17.5 14.501" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path><path d="M9.5,18.5h-8a1,1,0,0,1-1-1V3.5a1,1,0,0,1,1-1h18a1,1,0,0,1,1,1V10" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path><path d="M5.5 0.501L5.5 5.501" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path><path d="M15.5 0.501L15.5 5.501" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path><path d="M0.5 7.501L20.5 7.501" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"></path></g>
+    )
+}

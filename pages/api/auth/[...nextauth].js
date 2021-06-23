@@ -8,9 +8,19 @@ export default NextAuth({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
-        // ...add more providers here
+        Providers.Twitter({
+            clientId: process.env.TWITTER_CLIENT_ID,
+            clientSecret: process.env.TWITTER_CLIENT_SECRET
+        })
     ],
     
     // A database is optional, but required to persist accounts in a database
     database: process.env.DATABASE_URL,
+
+    callbacks: {
+        session: async (session, user) => {
+            session.id = user.id
+            return Promise.resolve(session)
+        }
+    }
 })
