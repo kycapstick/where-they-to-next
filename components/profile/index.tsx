@@ -33,7 +33,7 @@ export default function Profile({ entry }) {
                             />
                         </div>
                     }
-                    <div className={`${session && session.id ? 'mt-8' : ''}`}>
+                    <div className={`mt-8`}>
                         {
                             entry.families && entry.families.length > 0 &&
                             <div>

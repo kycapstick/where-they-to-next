@@ -40,28 +40,33 @@ export default function ImageUploader({ user_id, setImage, image }) {
         <div>
             <h2 className="h3 mt-8 text-center">Image</h2>
             <p className="text-center pt-2">You can <a className="underline" onClick={handleModalToggle} href="#">select an existing image</a> or upload a new one below:</p>
-            <div className={`${!image || !image.url ? 'bg-grey-10 pt-image' : ''} relative mt-8 w-image mx-auto`}>
-                {
-                    image && image.url 
-                    ?
-                    <>
-                    <Image 
-                        src={ image.url } 
-                        alt=""
-                        height={ 350 }
-                        width={ 350 }
-                        layout="intrinsic"
-                        objectFit="contain"
-                        objectPosition="center"
-                    />
-                    <button role="button" className="w-full text-center bg-black-400 text-white py-2 mt-4" onClick={clearImage}>
+            {
+                image && image.url 
+                ?
+                <>
+                    <div className="relative pt-image mt-8 w-full mx-auto bg-grey-10">
+                        <div className="absolute inset-0">
+                            <div className="flex justify-center">
+                                <Image 
+                                    src={ image.url } 
+                                    alt=""
+                                    height={ 350 }
+                                    width={ 350 }
+                                    layout="intrinsic"
+                                    objectFit="cover"
+                                    objectPosition="center"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <button role="button" className="w-full text-center bg-black-400 text-white py-2" onClick={clearImage}>
                         remove image
                     </button>
-                    </>
-                    :
-                    null
-                }
-            </div>
+                </>
+                :
+                <div className={`bg-grey-10 pt-image mt-8 w-full mx-auto`}>
+                </div>
+            }
             <div className="flex justify-center mt-8 text-center">
                 <input className="" type="file" onChange={handleImageUpload} disabled={uploading} />
                 {

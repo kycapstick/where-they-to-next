@@ -14,23 +14,31 @@ function Autocomplete({
     const [ value, setValue] = useState('');
     const [ options, setOptions ] = useState([]);
     const [ loading, setLoading ] = useState(false);
-    const [ tempSelections, setTempSelections ] = useState(selections)
+    const [ active, setActive ] = useState(false);
+
+    const getOptions = async (signal) => {
+        try {
+            const result = await fetch(`/api/search?type=${type}&q=${value}`, { signal: signal });
+            const allOptions = await result.json();
+            setOptions(allOptions);
+            setLoading(false);
+        } catch(err) {
+            setLoading(false)
+        }   
+    }
     let timeOutId;
+    let controller = new AbortController();
+    let signal = controller.signal;
     const handleChange = (value) => {
         setValue(value);
         setOptions([]);
-        if (value.length && value.length > 2) {
+        if (value && value.length > 2) {
             clearTimeout(timeOutId);
-            timeOutId = setTimeout(async () => { 
-                setLoading(true);
-                try {
-                    const result = await fetch(`/api/search?type=${type}&q=${value}`);
-                    const allOptions = await result.json();
-                    setOptions(allOptions);
-                    setLoading(false);
-                } catch(err) {
-                    setLoading(false)
-                }   
+            controller.abort();
+            timeOutId = setTimeout(() => { 
+                controller = new AbortController();
+                signal = controller.signal;
+                getOptions(signal);
             }, 1000)
         } 
     }
@@ -48,7 +56,8 @@ function Autocomplete({
 
     const removeItem = (e) => {
         e.preventDefault();
-        const updatedSelections = selections.filter((selection) => selection.id !== e.target.dataset.id);
+        const target = e.target.classList.contains('icon') ? e.target.parentNode : e.target;
+        const updatedSelections = selections.filter((selection) => selection.id !== target.dataset.id);
         makeSelection(updatedSelections);
     }
 
@@ -66,18 +75,18 @@ function Autocomplete({
                 label={label}
                 value={value}
                 onChange={handleChange}
-                onBlur={() => setOptions([])}
+                onFocus={ () => setActive(true) }
+                onBlur={() => setActive(false)}
                 disabled={loading}
                 onKeypress={onKeypress}
             />
-            {
-                options.length > 0 &&
-                <ul>
-                    { options.map((option) => (
-                        <li key={option.id}><a data-id={option.id} data-name={option.name}  onClick={handleSelection} href='#'>{option.name}</a></li>
+            <div className="relative">
+                <ul className="absolute inset-0">
+                    { options.length > 0 && options.map((option) => (
+                        <li className={`${active ? 'block' : 'hidden'} paragraph border border-grey-50 border-t-0 bg-white`} key={option.id}><a className="block w-full py-2 px-4  bg-white hover:bg-grey-10" data-id={option.id} data-name={option.name}  onMouseDown={handleSelection} href='#'>{option.name}</a></li>
                     ))}
                 </ul>
-            }
+            </div>
         </>
     )
 }

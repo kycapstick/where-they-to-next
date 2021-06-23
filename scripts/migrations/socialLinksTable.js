@@ -29,7 +29,7 @@ module.exports.socialLinksUp = () => {
 
 module.exports.socialLinksDown = () => {
     return new Promise((resolve, reject) => {            
-        const dropSocialLinks = "DROP TABLE IF EXISTS socialLinks";
+        const dropSocialLinks = "DROP TABLE IF EXISTS social_links";
             
             db.query(dropSocialLinks, function (err, result) {
                 if (err) return reject(err);
