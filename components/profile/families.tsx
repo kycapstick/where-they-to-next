@@ -6,7 +6,7 @@ export default function Families({ families, accentColor }) {
     return (
         <>
             <div className="flex">
-                <div className="mt-2 paragraph mr-4" style={{ color: accentColor }}>
+                <div className="mt-2 paragraph mr-5" style={{ color: accentColor }}>
                     <DynamicIcon type="family" large={true} />
                 </div>
                 <ul>

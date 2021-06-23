@@ -28,44 +28,54 @@ export default function ImageUploader({ user_id, setImage, image }) {
             }
         }
     }
+
+    const clearImage = (e) => {
+        e.preventDefault();
+        setImage(null);
+    }
     const handleModalToggle = async () => {
         setOpenModal(!openModal);
     }
     return (
-        <>
-            {
-                image && image.url 
-                ?
-                <Image 
-                    src={ image.url } 
-                    alt=""
-                    height={ 500 }
-                    width={ 500 }
-                    layout="responsive"
-                    objectFit="contain"
-                    objectPosition="center"
-                />
-                :
-                null
-            }
-            <input type="file" onChange={handleImageUpload} disabled={uploading} />
-            {
-                openModal 
-                ? 
-                <MediaModal 
-                    open={openModal}
-                    toggleModal={handleModalToggle}
-                    user_id={user_id}
-                    setImage={setImage}
-                    setOpenModal={setOpenModal}
-                />
-                : 
-                <button
-                    onClick={handleModalToggle}
-                >
-                    Choose image
-                </button>
-            }
-        </>
+        <div>
+            <h2 className="h3 mt-8 text-center">Image</h2>
+            <p className="text-center pt-2">You can <a className="underline" onClick={handleModalToggle} href="#">select an existing image</a> or upload a new one below:</p>
+            <div className={`${!image || !image.url ? 'bg-grey-10 pt-image' : ''} relative mt-8 w-image mx-auto`}>
+                {
+                    image && image.url 
+                    ?
+                    <>
+                    <Image 
+                        src={ image.url } 
+                        alt=""
+                        height={ 350 }
+                        width={ 350 }
+                        layout="intrinsic"
+                        objectFit="contain"
+                        objectPosition="center"
+                    />
+                    <button role="button" className="w-full text-center bg-black-400 text-white py-2 mt-4" onClick={clearImage}>
+                        remove image
+                    </button>
+                    </>
+                    :
+                    null
+                }
+            </div>
+            <div className="flex justify-center mt-8 text-center">
+                <input className="" type="file" onChange={handleImageUpload} disabled={uploading} />
+                {
+                    openModal 
+                    && 
+                    <MediaModal 
+                        open={openModal}
+                        toggleModal={handleModalToggle}
+                        user_id={user_id}
+                        setImage={setImage}
+                        setOpenModal={setOpenModal}
+                    />                    
+                }
+            </div>
+        </div>
     )
 }

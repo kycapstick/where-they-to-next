@@ -3,11 +3,11 @@ import DynamicIcon from "../icons/DynamicIcon"
 export default function socialLinks({ socials, name, accentColor }) {
     console.log(socials);
     return (
-        <div className="mt-8">
-            <ul className="mt-4 flex" style={{color: accentColor}}>
+        <div className="mt-6">
+            <ul className="flex" style={{color: accentColor}}>
                 {
                     socials.facebook &&
-                    <li>
+                    <li className="nth-child-2:ml-3">
                         <a href={`www.facebook.com/${socials.facebook}`} className="paragraph">
                             <DynamicIcon 
                                 type="facebook"
@@ -17,8 +17,8 @@ export default function socialLinks({ socials, name, accentColor }) {
                     </li>
                 }
                 {
-                    // socials.instagram &&
-                    <li>
+                    socials.instagram &&
+                    <li className="nth-child-2:ml-3">
                         <a href={`https://www.instagram.com/${socials.instagram}`} className="paragraph">
                             <DynamicIcon 
                                 type="instagram"
@@ -29,8 +29,8 @@ export default function socialLinks({ socials, name, accentColor }) {
                     </li>
                 }
                 {
-                    // socials.twitter &&
-                    <li>
+                    socials.twitter &&
+                    <li className="nth-child-2:ml-3">
                         <a href={`https://www.twitter.com/${socials.twitter}`} className="paragraph">
                             <DynamicIcon 
                                 type="twitter"
@@ -41,8 +41,8 @@ export default function socialLinks({ socials, name, accentColor }) {
                     </li>
                 }
                 {
-                    // socials.twitch &&
-                    <li>
+                    socials.twitch &&
+                    <li className="nth-child-2:ml-3">
                         <a href={`https://www.twitch.com/${socials.twitch}`} className="paragraph">
                             <DynamicIcon 
                                 type="twitch"
@@ -53,8 +53,8 @@ export default function socialLinks({ socials, name, accentColor }) {
                     </li>
                 }
                 {
-                    // socials.youtube &&
-                    <li>
+                    socials.youtube &&
+                    <li className="nth-child-2:ml-3">
                         <a href={`https://www.youtube.com/${socials.youtube}`} className="paragraph">
                             <DynamicIcon 
                                 type="youtube"
@@ -64,8 +64,8 @@ export default function socialLinks({ socials, name, accentColor }) {
                     </li>
                 }
                 {
-                    // socials.website &&
-                    <li>
+                    socials.website &&
+                    <li className="nth-child-2:ml-3">
                         <a href={`${socials.website}`} className="paragraph">
                             <DynamicIcon 
                                 type="website"

@@ -18,7 +18,7 @@ export default function ColorPicker({ value, setValue, errors, setErrors }) {
     }
     return (
         <div className="block">
-            <h2 className="text-center text-3xl mt-8">Accent Color</h2>
+            <h2 className="text-center mt-8 h3">Accent Color</h2>
             <p className="text-center">Add an accent color for this profile. For accessibility purposes, this color will need meet a certain contrast ratio against a white background.</p>
             <div className="py-4">
                 <label htmlFor="accent_color" className="mr-4">Accent Color</label>

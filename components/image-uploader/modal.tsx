@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image'
 
 import ImageEditor from './edit-image';
+import DynamicIcon from '@/components/icons/DynamicIcon';
 
 export default function MediaModal({ open:boolean  = false, toggleModal, user_id, setImage, setOpenModal }) {    
     const [ images, setImages ] = useState([]);
@@ -38,6 +39,11 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
         setEditImage(imageObject);
     }
 
+    const handleBack = (e) => {
+        e.preventDefault();
+        setEditImage(false);
+    }
+
     useEffect(() => {
         getImages();
         getCount(); 
@@ -48,48 +54,61 @@ export default function MediaModal({ open:boolean  = false, toggleModal, user_id
             {
                 open 
                     ?
-                    <div className="fixed inset-0 flex items-center p-40 bg-black-trans50">
-                        <div className="bg-white p-32 w-full">
-                            <button onClick={toggleModal}>
-                                X
+                    <div className="fixed inset-0 flex items-center p-40 bg-black-60">
+                        <div className="bg-white p-10 mx-auto w-1/2 relative">
+                            <button className="absolute top-0 right-0 p-6" role="button" onClick={toggleModal}>
+                                <DynamicIcon 
+                                    type="close"
+                                    large={true}
+                                    title="Close modal"
+                                />
                             </button>
-                            { loading &&
-                                <p>loading...</p> 
-                            }
                             {
                                 !loading && editImage &&
-                                <ImageEditor
-                                    image={editImage}
-                                    setImage={setImage}
-                                    setOpenModal={setOpenModal }
-                                />
+                                <div className="mt-8">
+                                    <ImageEditor
+                                        handleBack={handleBack}
+                                        image={editImage}
+                                        setImage={setImage}
+                                        setOpenModal={setOpenModal }
+                                    />
+                                </div>
+                            }
+                            { !editImage && 
+                                <h2 className="h4">Please select an image</h2>
+                            }
+                            { loading &&
+                                <p className="mt-3">loading...</p> 
                             }
                             {
                                 !loading && images.length > 0 && !editImage
                                 && 
-                                <ul className="flex">
-                                    {
-                                        images.map((image) => {
-                                            return (
-                                                <li
-                                                    key={image.id}
-                                                >
-                                                    <a href="#" onClick={() => { openEditor({ id: image.id, url: image.url, alt: image.alt }) }}>
-                                                        <Image 
-                                                            src={decodeURI(image.url)}
-                                                            alt={image.alt}
-                                                            width={200}
-                                                            height={200}
-                                                            layout="intrinsic"
-                                                            objectFit="contain"
-                                                            objectPosition="center"
-                                                        />
-                                                    </a>
-                                                </li>
-                                            )
-                                        })  
-                                    }           
-                                </ul>                    
+                                <>
+                                    <ul className="flex mt-8 justify-center">
+                                        {
+                                            images.map((image) => {
+                                                return (
+                                                    <li
+                                                        key={image.id}
+                                                    >
+                                                        <a href="#" onClick={() => { openEditor({ id: image.id, url: image.url, alt: image.alt }) }}>
+                                                            <Image 
+                                                                src={decodeURI(image.url)}
+                                                                alt={image.alt}
+                                                                width={200}
+                                                                height={200}
+                                                                layout="intrinsic"
+                                                                objectFit="contain"
+                                                                objectPosition="center"
+                                                            />
+                                                        </a>
+                                                    </li>
+                                                )
+                                            })  
+                                        }           
+                                    </ul>        
+                                </>
+                                            
                             }
                             {
                                 !loading && !images.length && !editImage && <p>No images found.</p>

@@ -1,6 +1,8 @@
 import Accessibility from './Accessibility';
+import Back from './Back';
 import Calendar from './Calendar';
 import CalendarEdit from './CalendarEdit';
+import Close from './Close';
 import Edit from "./Edit";
 import Family from './Family';
 import Filter from './Filter';
@@ -18,8 +20,10 @@ import Youtube from './Youtube';
 
 const Components = {
     accessibility: Accessibility,
+    back: Back,
     calendar: Calendar,
     calendarEdit: CalendarEdit,
+    close: Close,
     edit: Edit,
     family: Family,
     filter: Filter,

@@ -174,7 +174,7 @@ export default function DashboardPage() {
     return (
         <>
             <Nav />
-            <Container className="">
+            <Container className="" form={true}>
                 { 
                     errors.length > 0 && 
                     <>
@@ -189,7 +189,7 @@ export default function DashboardPage() {
                 }
                 { session && session.id ?
                     <>
-                        <h1 className="text-center text-3xl my-3">Create a Performer Profile</h1>                
+                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Create a <span className="block h1">Performer Profile</span></h1>                
                         <form action="" onSubmit={handleSubmit}>
                             <div className="py-6">
                                 <TextInput 
@@ -200,14 +200,12 @@ export default function DashboardPage() {
                                     onKeypress={ checkErrors }
                                 />
                             </div>
-                            <div className="py-6">
-                                <Textarea 
-                                    name="bio"
-                                    label="Bio"
-                                    value={bio}
-                                    onChange={setBio}
-                                />
-                            </div>
+                            <Textarea 
+                                name="bio"
+                                label="Bio"
+                                value={bio}
+                                onChange={setBio}
+                            />
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
                                 image={image}

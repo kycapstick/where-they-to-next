@@ -31,7 +31,8 @@ export default function Tags({ name, label, type, selections, makeSelection}) {
     }
 
     return (
-        <> 
+        <div className="mt-8"> 
+            <h2 className="h3 text-center">Tags</h2>
             <Autocomplete 
                 name={name}
                 label={label}
@@ -50,6 +51,6 @@ export default function Tags({ name, label, type, selections, makeSelection}) {
                     }
                 </ul>
             }
-        </>
+        </div>
     )
 }

@@ -10,9 +10,11 @@ module.exports.breakpoints = {
 
 // SPACING
 // Genereates a spacing object from a base value up to a max
-const generateSpacing = (base = 4, max = 20) => {
+const generateSpacing = (base = 4, max = 25) => {
     const spacing = {};
     spacing['auto'] = 'auto';
+    spacing['full'] = '100%';
+    spacing['image'] = '350px';
     for (let i = 1; i <= max; i = i + 1) {
         spacing[i] = `${i * base}px`
     }

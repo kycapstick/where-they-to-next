@@ -35,6 +35,10 @@ module.exports = plugin(function({ addBase }) {
                 maxWidth: '1770px',
             }
         },
+        '.container--form': {
+            maxWidth: '1100px',
+            margin: '0 auto'
+        },
         '.container--full': {
             maxWidth: `${breakpoints.xl}px`,
             margin: '0 auto'
