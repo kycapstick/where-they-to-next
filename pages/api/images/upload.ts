@@ -62,6 +62,7 @@ export default async (req, res) => {
                         `,
                         [files.file.name, Location, fields.user_id]
                     )
+                    // @ts-ignore
                     return resolve({ id: results.insertId, url: Location })    
                 } catch(error) {
                     console.log(error);
