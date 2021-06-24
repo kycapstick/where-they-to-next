@@ -51,15 +51,10 @@ export default function SocialLinks({ facebook, setFacebook, instagram, setInsta
                 socialLinks.length ?
                 <>
                     <label htmlFor="existing-socials">Use existing social media</label>
-                    <select name="existing-socials" id="existing-socials" onChange={handleSocialLinks} disabled={loading}>
+                    <select name="existing-socials" id="existing-socials" onChange={handleSocialLinks} disabled={loading} value={socialLinksId ? socialLinksId : ''}>
                         <option value="">Select</option>
                         {
                             socialLinks.map((socialLink, index) => {
-                                if (socialLinksId && socialLinksId === socialLink.id) {
-                                    return (
-                                        <option value={socialLink.id} key={`social-links-${index}`} selected>{socialLink.name}</option>
-                                    )                                    
-                                }
                                 return (
                                     <option value={socialLink.id} key={`social-links-${index}`}>{socialLink.name}</option>
                                 )
