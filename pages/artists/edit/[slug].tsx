@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-// Components
 import Nav from '@/components/nav'
 import Container from '@/components/container'
 import ImageUploader from '@/components/image-uploader';
@@ -12,38 +11,40 @@ import Tags from '@/components/tags';
 import ColorPicker from '@/components/color-picker';
 import Tips from '@/components/tips-input';
 import SocialLinks from '@/components/social-links';
+import BlockButton from '@/components/buttons/block';
 
-export default function DashboardPage() {
+
+export default function EditArtistPage({ artist }) {
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-    const [ image, setImage ] = useState(null);
-    const [ name, setName ] = useState('');
-    const [ bio, setBio ] = useState('');
-    const [ family, setFamily ] = useState([]) 
-    const [ types, setTypes ] = useState([]);
-    const [ color, setColor ] = useState('#000000');
-    const [ tips, setTips ] = useState('');
-    const [ tipsLink, setTipsLink ] = useState('');
+    const [ image, setImage ] = useState(artist.image);
+    const [ name, setName ] = useState(artist.name);
+    const [ bio, setBio ] = useState(artist.bio);
+    const [ family, setFamily ] = useState(artist.families) 
+    const [ types, setTypes ] = useState(artist.artist_types ? artist.artist_types : []);
+    const [ color, setColor ] = useState(artist.accent_color);
+    const [ tips, setTips ] = useState(artist.tips);
+    const [ tipsLink, setTipsLink ] = useState(artist.tips_link);
 
     // Social Links
-    const [socialLinksId, setSocialLinksId ] = useState(null);
-    const [ facebook, setFacebook ] = useState('');
-    const [ instagram, setInstagram ] = useState('');
-    const [ tiktok, setTiktok ] = useState('');
-    const [ twitch, setTwitch ] = useState('');
-    const [ twitter, setTwitter ] = useState('');
-    const [ website, setWebsite ] = useState('');
-    const [ youtube, setYouTube ] = useState('');
+    const [socialLinksId, setSocialLinksId ] = useState(artist.social_links_id);
+    const [ facebook, setFacebook ] = useState(artist.social_links ? artist.social_links.facebook : '');
+    const [ instagram, setInstagram ] = useState(artist.social_links ? artist.social_links.instagram : '');
+    const [ tiktok, setTiktok ] = useState(artist.social_links ? artist.social_links.tiktok : '');
+    const [ twitch, setTwitch ] = useState(artist.social_links ? artist.social_links.twitch : '');
+    const [ twitter, setTwitter ] = useState(artist.social_links ? artist.social_links.twitter : '');
+    const [ website, setWebsite ] = useState(artist.social_links ? artist.social_links.website : '');
+    const [ youtube, setYouTube ] = useState(artist.social_links ? artist.social_links.youtube : '');
 
-    const createPerformerTypesRelationships = async(performerId) => {
+    const createArtistTypesRelationships = async(artistId) => {
         return new Promise(async(resolve, reject) => {
             try {
                 await Promise.all(types.map(async(type) => {
-                    const response = await fetch(`/api/performers_performer_types/create`, {
+                    const response = await fetch(`/api/artists_artist_types/create`, {
                         method: 'POST',
                         body: JSON.stringify({
-                            performerTypeId: type.id,
-                            performerId
+                            artistTypeId: type.id,
+                            artistId
                         })
                     })
                     const result = await response.json();
@@ -57,18 +58,17 @@ export default function DashboardPage() {
         });
     }
 
-    const createFamilyRelationships = async(performerId) => {
+    const updateFamilyRelationships = async(families, route) => {
         return new Promise(async (resolve, reject) => {
             try {
-                await Promise.all(family.map(async(family) => {
-                    const response = await fetch(`/api/family_performers/create`, {
+                await Promise.all(families.map(async(family) => {
+                    const response = await fetch(`/api/family_artists/${route}`, {
                         method: 'POST',
                         body: JSON.stringify({
                             familyId: family.id,
-                            performerId,
+                            artistId: artist.id,
                         })
                     })
-                    const result = await response.json();
                     return family;
                 }));
                 return resolve(true);
@@ -76,15 +76,37 @@ export default function DashboardPage() {
                 console.log(err);
                 return reject(err);
             }
-        })
-        
+        })   
     }
 
-    const createPerformer = async(socials) => {
+    const handleFamilies = () => {
+        return new Promise(async(resolve, reject) => {
+            const currentFamilyIds = artist.families.map((fam) => fam.id);
+            const newFamilyIds = family.map((fam) => fam.id);
+            const newFamilies = family.filter((fam) => currentFamilyIds.indexOf(fam.id) === -1);
+            const removedFamilies = artist.families.filter((fam) => newFamilyIds.indexOf(fam.id) === -1);
+            try {
+                if (newFamilies && newFamilies.length > 0) {
+                    await updateFamilyRelationships(newFamilies, 'create');
+                }
+                if (removedFamilies && removedFamilies.length) {
+                    await updateFamilyRelationships(removedFamilies, 'delete')
+                }
+                return resolve(true)
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
+
+    }
+
+    const createArtist = async(socials) => {
         try {
-            const response = await fetch(`/api/performers/create`, {
+            const response = await fetch(`/api/artists/edit`, {
                 method: 'POST',
                 body: JSON.stringify({
+                    id: artist.id,
                     name, 
                     bio,
                     tips,
@@ -94,17 +116,7 @@ export default function DashboardPage() {
                     socials
                 })
             })
-            const result = await response.json();
-            const { insertId } = result;
-            if (insertId) {
-                if (family && family.length > 0) {
-                    await createFamilyRelationships(insertId);
-                }
-                if (types && types.length > 0) {
-                    await createPerformerTypesRelationships(insertId);
-                }
-            }
-
+            await handleFamilies()
         } catch(err) {
             console.log(err);
         }
@@ -148,7 +160,7 @@ export default function DashboardPage() {
             if (!socialLinksId) {
                 socials = await createSocialLinksId();
             }
-            createPerformer(socials);
+            createArtist(socials);
         } catch(err) {
             console.log(err)
         }
@@ -170,11 +182,10 @@ export default function DashboardPage() {
             setErrors(updatedErrors);
         }
     }
-
     return (
         <>
             <Nav />
-            <Container className="" form={true}>
+            <Container className="py-20" form={true}>
                 { 
                     errors.length > 0 && 
                     <>
@@ -187,9 +198,9 @@ export default function DashboardPage() {
                         </ul>
                     </>
                 }
-                { session && session.id ?
+                { session && session.id && session.id === artist.user_id ?
                     <>
-                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Create a <span className="block h1">Performer Profile</span></h1>                
+                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Edit <span className="block h1">Artist Profile</span></h1>                
                         <form action="" onSubmit={handleSubmit}>
                             <div className="py-6">
                                 <TextInput 
@@ -220,10 +231,11 @@ export default function DashboardPage() {
                             />
                             <Tags 
                                 name="tags"
-                                label="Add performer tags"
-                                type="performer_types"
+                                label="Add artist tags"
+                                type="artist_types"
                                 selections={types}
                                 makeSelection={setTypes}
+                                accentColor={color}
                             />
                             <ColorPicker 
                                 value={color}
@@ -255,7 +267,14 @@ export default function DashboardPage() {
                                 socialLinksId={socialLinksId}
                                 setSocialLinksId={setSocialLinksId}
                             />
-                            <input type="submit" value="Create Performer" className="border-2 px-6 py-4" style={{ borderColor: color }}/>
+                            <div className="flex justify-center my-10">
+                                <BlockButton 
+                                    handleClick={() => {}}
+                                    accentColor={color}
+                                    text="Edit Profile"
+                                    type="submit"
+                                />
+                            </div>
                         </form>
                     </> 
                     : 
@@ -265,4 +284,13 @@ export default function DashboardPage() {
             </Container>
         </>
     )
+}
+
+EditArtistPage.getInitialProps = async (cxt) => {
+    const { slug } = cxt.query;
+    const result = await fetch(`http://localhost:3000/api/artists/single?slug=${slug}`);
+    const response = await result.json();
+    return {
+        artist: response[0],
+    }
 }

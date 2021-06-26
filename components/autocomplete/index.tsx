@@ -35,7 +35,6 @@ function Autocomplete({
         console.log(value)
         if (value && value.length > 2) {
             clearTimeout(timeOutId);
-            console.log(controller);
             controller.abort();
             timeOutId = setTimeout(() => { 
                 controller = new AbortController();

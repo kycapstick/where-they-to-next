@@ -33,9 +33,9 @@ module.exports.familiesUp = () => {
 
 module.exports.familiesDown = () => {
     return new Promise((resolve, reject) => {            
-        const dropPerformers = "DROP TABLE IF EXISTS families";
+        const dropArtists = "DROP TABLE IF EXISTS families";
             
-            db.query(dropPerformers, function (err, result) {
+            db.query(dropArtists, function (err, result) {
                 if (err) return reject(err);
                 return resolve("Families table deleted");
             });

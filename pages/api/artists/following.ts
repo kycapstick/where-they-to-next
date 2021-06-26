@@ -13,8 +13,8 @@ const handler: NextApiHandler = async (req, res) => {
             case 'GET': 
                 results = await query(
                     `
-                        SELECT id FROM performers_users
-                        WHERE performer_id = ? AND user_id = ?
+                        SELECT id FROM artists_users
+                        WHERE artist_id = ? AND user_id = ?
                     `,
                     [Number(id), Number(user_id)]
                 )
@@ -23,7 +23,7 @@ const handler: NextApiHandler = async (req, res) => {
             case 'POST': 
                 results = await query(
                     `
-                        INSERT INTO performers_users (performer_id, user_id)
+                        INSERT INTO artists_users (artist_id, user_id)
                         values(?, ?)
                     `,
                     [Number(id), Number(user_id)]
@@ -33,7 +33,7 @@ const handler: NextApiHandler = async (req, res) => {
             case 'DELETE': 
                 results = await query(
                     `
-                        DELETE FROM performers_users
+                        DELETE FROM artists_users
                         WHERE id = ?
                     `,
                     Number(id)

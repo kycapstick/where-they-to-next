@@ -23,7 +23,7 @@ export default function ProfileTitle({ title, types, slug, accentColor = '#00000
                     }
                     { owner && 
                         <EditButton 
-                            href={`/performers/edit/${slug}`}
+                            href={`/artists/edit/${slug}`}
                             accentColor={accentColor}
                         />  
                     }
@@ -35,7 +35,7 @@ export default function ProfileTitle({ title, types, slug, accentColor = '#00000
                 <ul className="pt-3 flex">
                     {
                         types.map((type, index) => (
-                            <li key={`performer-tag-${index}`} className="nth-child-2:ml-4" style={{color: accentColor}}>
+                            <li key={`artist-tag-${index}`} className="nth-child-2:ml-4" style={{color: accentColor}}>
                                 {/* TODO - Add link to events filtered by tag */}
                                 <a className="paragraph" href="#">{`#${type.name}`}</a>
                             </li>

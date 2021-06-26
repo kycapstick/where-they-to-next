@@ -20,14 +20,14 @@ const handler: NextApiHandler = async (req, res) => {
         if (!session) {
             return res.status(404).json({ message: `You must be logged in`})
         }
-        const activeUser = await verifyUser(id, session.id, 'performers');
+        const activeUser = await verifyUser(id, session.id, 'artists');
         if (!activeUser) {
             return res.status(401).json({ message: `You are not authorized to update this entry`});
         }
 
         const results = await query(
             `
-                UPDATE performers
+                UPDATE artists
                 SET name = ?, bio = ?, accent_color = ?, tips = ?, tips_link = ?, image_id = ?, social_links_id = ?
                 WHERE id = ?
             `,

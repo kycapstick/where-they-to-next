@@ -1,5 +1,5 @@
 const db = require('../db');
-const { seedPerformers } = require('./performersSeeds');
+const { seedArtists } = require('./artistsSeeds');
 const { seedFamilies } = require('./familiesSeeds');
 const { seedVenues } = require('./venuesSeeds');
 const { seedEvents } = require('./eventSeeds');
@@ -8,7 +8,7 @@ const { seedEvents } = require('./eventSeeds');
 const seedTables = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            let status = await seedPerformers();
+            let status = await seedArtists();
             console.log(status);
             status = await seedFamilies();
             console.log(status);

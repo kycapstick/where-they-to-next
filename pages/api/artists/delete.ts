@@ -18,13 +18,13 @@ const handler: NextApiHandler = async (req, res) => {
         if (!user_id) {
             return res.status(401).json({ message: `You must be logged in to complete this action`});
         }
-        const activeUser = await verifyUser(id, user_id, 'performers');
+        const activeUser = await verifyUser(id, user_id, 'artists');
         if (!activeUser) {
             return res.status(401).json({ message: `You are not authorized to update this entry`});
         }
         const results = await query(
             `
-                DELETE FROM performers
+                DELETE FROM artists
                 WHERE id = ?
             `,
             id

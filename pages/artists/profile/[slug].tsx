@@ -8,7 +8,7 @@ import Profile from '@/components/profile';
 export default function DashboardPage() {
     const router = useRouter();
     const { slug } = router.query;
-    const { entry, isLoading } = useEntry(`${slug}`, 'performers');
+    const { entry, isLoading } = useEntry(`${slug}`, 'artists');
     return (
         <>
             <Nav />
@@ -18,7 +18,7 @@ export default function DashboardPage() {
                     entry={entry[0]} 
                 />
             }
-            { !isLoading && !entry.length && 
+            { !isLoading && entry && !entry.length && 
                 <p>Sorry, we're having trouble locating that profile.</p>
             }
             { isLoading ? 

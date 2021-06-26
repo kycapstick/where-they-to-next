@@ -2,23 +2,23 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { performerId, performerTypeId } = JSON.parse(req.body)
+    let { artistId, familyId } = JSON.parse(req.body)
     try {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
         }
-        if (!performerId || !performerTypeId) {
+        if (!artistId || !familyId) {
             return res
                 .status(400)
-                .json({ message: '`performer_id` and `performer_type_id` are both required' })
+                .json({ message: '`artist_id` and `family_id` are both required' })
         } 
 
         const results = await query(
             `
-                INSERT INTO performers_performer_types (performer_id, performer_type_id)
+                INSERT INTO families_artists (artist_id, family_id)
                 VALUES (?, ?)
             `,
-            [performerId, performerTypeId]
+            [artistId, familyId]
         )
         return res.json(results)
     } catch (e) {

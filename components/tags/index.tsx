@@ -1,7 +1,7 @@
 import Autocomplete from '@/components/autocomplete';
 import DynamicIcon from '@/components/icons/DynamicIcon';
 
-export default function Tags({ name, label, type, selections, makeSelection}) {
+export default function Tags({ name, label, type, selections, makeSelection, accentColor }) {
     const handleKeypress = (e) => {
         return new Promise(async(resolve, reject) => {
             if (e.keyCode === 13) {
@@ -41,7 +41,7 @@ export default function Tags({ name, label, type, selections, makeSelection}) {
                     selections && selections.length > 0 ?
                     
                         selections.map((selection, index) => (
-                            <li key={index} className="paragraph nth-child-2:ml-6">{`#${selection.name}`} <button role="button" className="ml-2" data-id={selection.id} onClick={ removeItem }><DynamicIcon type="close" /></button></li>
+                            <li key={index} className="paragraph nth-child-2:ml-6 flex items-center group" style={{ color: accentColor }}>{`#${selection.name}`} <button role="button" className="ml-4 text-white p-2 rounded-full opacity-0 group-hover:opacity-100  transition-opacity duration-4" style={{ backgroundColor: accentColor }} data-id={selection.id} onClick={ removeItem }><DynamicIcon type="close" /></button></li>
                         ))
                         : <li className="text-center italic">You have not yet added any tags.</li>
                 }

@@ -46,38 +46,51 @@ export default function SocialLinks({ facebook, setFacebook, instagram, setInsta
     }, [fetchSocialLinks])
     return (
         <>
-            <h2 className="text-3xl my-10 text-center">Social Links</h2>
+            <h2 className="h3 mt-10 text-center">Social Links</h2>
             {
                 socialLinks.length ?
                 <>
-                    <label htmlFor="existing-socials">Use existing social media</label>
-                    <select name="existing-socials" id="existing-socials" onChange={handleSocialLinks} disabled={loading} value={socialLinksId ? socialLinksId : ''}>
-                        <option value="">Select</option>
-                        {
-                            socialLinks.map((socialLink, index) => {
-                                return (
-                                    <option value={socialLink.id} key={`social-links-${index}`}>{socialLink.name}</option>
-                                )
-                            })
-                        }
-                    </select>
+                    <p className="paragraph text-center">You can either add new social links below or use an existing set of social media links:</p>
+                    <label htmlFor="existing-socials" className="block label mt-6">Existing Social Links</label>
+                    <div className="w-full mx-auto p-4 border mt-4">
+                        <select className="block w-full" name="existing-socials" id="existing-socials" onChange={handleSocialLinks} disabled={loading} value={socialLinksId ? socialLinksId : ''}>
+                            <option value="">Create New</option>
+                            {
+                                socialLinks.map((socialLink, index) => {
+                                    return (
+                                        <option value={socialLink.id} key={`social-links-${index}`}>{socialLink.name}</option>
+                                    )
+                                })
+                            }
+                        </select>
+                    </div>
                 </>
                 : null
             }
-            <div className="flex">
-                <TextInput name="facebook" label="Facebook" onChange={setFacebook} value={facebook} disabled={socialLinksId !== null}/>
-                <TextInput name="instagram" label="Instagram" onChange={setInstagram} value={instagram} disabled={socialLinksId !== null}/>
+            <div className="md:flex">
+                <div className="flex-half">                
+                    <TextInput name="facebook" label="Facebook" onChange={setFacebook} value={facebook} disabled={socialLinksId !== null}/>
+                </div>
+                <div className="flex-half md:ml-6">                
+                    <TextInput name="instagram" label="Instagram" onChange={setInstagram} value={instagram} disabled={socialLinksId !== null}/>
+                </div>
             </div>
-            <div className="flex">
-                <TextInput name="tiktok" label="TikTok" onChange={setTiktok} value={tiktok} disabled={socialLinksId !== null}/>
-                <TextInput name="twitch" label="Twitch" onChange={setTwitch} value={twitch} disabled={socialLinksId !== null}/>
+            <div className="md:flex">
+                <div className="flex-half">
+                    <TextInput name="twitter" label="Twitter" onChange={setTwitter} value={twitter} disabled={socialLinksId !== null}/>
+                </div>
+                <div className="flex-half md:ml-6">
+                    <TextInput name="twitch" label="Twitch" onChange={setTwitch} value={twitch} disabled={socialLinksId !== null}/>
+                </div>
             </div>
-            <div className="flex">
-                <TextInput name="twitter" label="Twitter" onChange={setTwitter} value={twitter} disabled={socialLinksId !== null}/>
-                <TextInput name="youtube" label="YouTube" onChange={setYoutube} value={youtube} disabled={socialLinksId !== null}/>
+            <div className="md:flex">
+                <div className="flex-half">
+                    <TextInput name="youtube" label="YouTube" onChange={setYoutube} value={youtube} disabled={socialLinksId !== null}/>
+                </div>
+                <div className="flex-half md:ml-6">
+                    <TextInput name="website" label="Website" onChange={setWebsite} value={website} disabled={socialLinksId !== null}/>
+                </div>
             </div>
-            <TextInput name="website" label="Website" onChange={setWebsite} value={website} disabled={socialLinksId !== null}/>
-
 
         </>
     )

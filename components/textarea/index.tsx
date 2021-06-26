@@ -7,7 +7,7 @@ export default function TextareaInput({ name, label, value, onChange, helperText
         <div className="">  
             <label className="label block text-left" htmlFor={name}>{ label }</label>
             <textarea 
-                    className="border-grey-50 border block w-full mt-2 p-4" 
+                    className="border-grey-50 border block w-full mt-2 p-4 paragraph" 
                     id={name} 
                     name={name}
                     onChange={handleChange}

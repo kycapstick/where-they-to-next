@@ -11,7 +11,7 @@ function FollowButton({
     const [ followingId, setFollowingId ] = useState(false);
     const checkFollowing = async () => {
         if (user_id && entry_id) {
-            const url = `/api/performers/following?id=${entry_id}&user_id=${user_id}`;
+            const url = `/api/artists/following?id=${entry_id}&user_id=${user_id}`;
             const resp = await window.fetch(url);
             const data = await resp.json();
             if (data.length) {
