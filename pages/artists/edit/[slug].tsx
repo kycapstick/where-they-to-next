@@ -312,7 +312,8 @@ export default function EditArtistPage({ artist, slug }) {
 
 EditArtistPage.getInitialProps = async (cxt) => {
     const { slug } = cxt.query;
-    const result = await fetch(`/api/artists/single?slug=${slug}`);
+    console.log(cxt.req.headers);
+    const result = await fetch(`http://${cxt.req.headers.host}/api/artists/single?slug=${slug}`);
     const response = await result.json();
     return {
         artist: response[0],
