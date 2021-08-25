@@ -9,7 +9,6 @@ module.exports.socialLinksUp = () => {
                             name TEXT NOT NULL,
                             facebook TEXT NULL,
                             instagram TEXT NULL,
-                            tiktok TEXT NULL,
                             twitch TEXT NULL,
                             twitter TEXT NULL,
                             website TEXT NULL,

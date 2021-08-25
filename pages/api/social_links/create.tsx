@@ -15,10 +15,10 @@ const handler: NextApiHandler = async (req, res) => {
 
         const results = await query(
             `
-                INSERT INTO social_links (user_id, name, facebook, instagram, tiktok, twitch, twitter, website, youtube)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO social_links (user_id, name, facebook, instagram, twitch, twitter, website, youtube)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `,
-            [session.id, name, facebook, instagram, tiktok, twitch, twitter, website, youtube]
+            [session.id, name, facebook, instagram, twitch, twitter, website, youtube]
         )
         return res.json(results)
     } catch (e) {
