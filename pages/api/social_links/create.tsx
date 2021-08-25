@@ -7,7 +7,7 @@ const handler: NextApiHandler = async (req, res) => {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
         }
-        let { name, facebook, instagram, tiktok, twitch, twitter, website, youtube } = JSON.parse(req.body)
+        let { name, facebook, instagram, twitch, twitter, website, youtube } = JSON.parse(req.body)
         const session = await getSession({ req });
         if (!session) {
             return res.status(404).json({ message: `You must be logged in`})

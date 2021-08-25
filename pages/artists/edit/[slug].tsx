@@ -33,7 +33,6 @@ export default function EditArtistPage({ artist, slug }) {
     const [socialLinksId, setSocialLinksId ] = useState(artist.social_links_id);
     const [ facebook, setFacebook ] = useState(artist.social_links ? artist.social_links.facebook : '');
     const [ instagram, setInstagram ] = useState(artist.social_links ? artist.social_links.instagram : '');
-    const [ tiktok, setTiktok ] = useState(artist.social_links ? artist.social_links.tiktok : '');
     const [ twitch, setTwitch ] = useState(artist.social_links ? artist.social_links.twitch : '');
     const [ twitter, setTwitter ] = useState(artist.social_links ? artist.social_links.twitter : '');
     const [ website, setWebsite ] = useState(artist.social_links ? artist.social_links.website : '');
@@ -158,7 +157,6 @@ export default function EditArtistPage({ artist, slug }) {
                         name,
                         facebook,
                         instagram,
-                        tiktok, 
                         twitch,
                         twitter,
                         website,
@@ -282,8 +280,6 @@ export default function EditArtistPage({ artist, slug }) {
                                 setFacebook={setFacebook}
                                 instagram={instagram}
                                 setInstagram={setInstagram}
-                                tiktok={tiktok}
-                                setTiktok={setTiktok}
                                 twitch={twitch}
                                 setTwitch={setTwitch}
                                 twitter={twitter}
