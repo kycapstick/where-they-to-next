@@ -18,7 +18,8 @@ export default function Profile({ entry }) {
                     <ProfileTitle 
                         title={entry.name}
                         owner={owner}
-                        types={entry.performer_types}
+                        types={entry.artist_types}
+                        slug={entry.slug}
                         accentColor={entry.accent_color}
                         modal={entry.tips || entry.tips_link ? { type: 'tips', title: `Tip ${entry.name}`, description: entry.tips, link: entry.tips_link } : { type: null, title: null, description: null, link: null } }
                     />
@@ -26,7 +27,7 @@ export default function Profile({ entry }) {
                         session && session.id &&
                         <div className="mt-6">
                             <FollowButton 
-                                route="performers"
+                                route="artists"
                                 accentColor={entry.accent_color}
                                 entry_id={entry.id}
                                 user_id={session.id}

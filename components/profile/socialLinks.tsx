@@ -1,14 +1,13 @@
 import DynamicIcon from "../icons/DynamicIcon"
 
 export default function socialLinks({ socials, name, accentColor }) {
-    console.log(socials);
     return (
         <div className="mt-6">
             <ul className="flex" style={{color: accentColor}}>
                 {
                     socials.facebook &&
                     <li className="nth-child-2:ml-3">
-                        <a href={`www.facebook.com/${socials.facebook}`} className="paragraph">
+                        <a href={`https://www.facebook.com/${socials.facebook}`} className="paragraph">
                             <DynamicIcon 
                                 type="facebook"
                                 large={true}

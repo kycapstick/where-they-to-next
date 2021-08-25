@@ -3,7 +3,7 @@ import ButtonLink from "@/components/button-link";
 
 
 export default function dashboardList(props) {
-    const { entries, isLoading, title = 'profile', route = "performers" } = props;
+    const { entries, isLoading, title = 'profile', route = "artists" } = props;
     return (
         <div>
             <h2>{`${route.toUpperCase()}`}</h2>
@@ -13,9 +13,9 @@ export default function dashboardList(props) {
                         ? 
                             <li>Loading</li> 
                         :
-                        entries.map((entry) => {
+                        entries.map((entry, i) => {
                             return (
-                                <li>
+                                <li key={`${route}-${i}`}>
                                     <Link href={`/${route}/profile/${entry.slug}`}>
                                         {entry.name}
                                     </Link>

@@ -1,10 +1,10 @@
 require('dotenv').config();
 const db = require('../db');
 
-module.exports.performersUp = () => {
+module.exports.artistsUp = () => {
     return new Promise((resolve, reject) => {
 
-        let createPerformers = `CREATE TABLE IF NOT EXISTS performers(
+        let createArtists = `CREATE TABLE IF NOT EXISTS artists(
                             id INT PRIMARY KEY AUTO_INCREMENT,
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -21,21 +21,21 @@ module.exports.performersUp = () => {
                             UNIQUE(slug)
                         )`;
 
-        db.query(createPerformers, function(err, results, fields) {
+        db.query(createArtists, function(err, results, fields) {
             if (err) {
                 return reject(err.message);
             }
-            return resolve('Performers table created');
+            return resolve('Artists table created');
         });
     });
     
 }
 
-module.exports.performersDown = () => {
+module.exports.artistsDown = () => {
     return new Promise((resolve, reject) => {            
-        const dropPerformers = "DROP TABLE IF EXISTS performers";
+        const dropArtists = "DROP TABLE IF EXISTS artists";
             
-            db.query(dropPerformers, function (err, result) {
+            db.query(dropArtists, function (err, result) {
                 if (err) return reject(err);
                 return resolve("Table deleted");
             });

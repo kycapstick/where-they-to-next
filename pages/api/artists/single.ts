@@ -9,7 +9,7 @@ const handler: NextApiHandler = async (req, res) => {
         }
         let results = await query(
             `
-                SELECT * FROM performers
+                SELECT * FROM artists
                 WHERE slug = ?
             `,
             slug
@@ -19,16 +19,16 @@ const handler: NextApiHandler = async (req, res) => {
                 result['families'] = [];
                 result['image'] = null;
                 result['social_links'] = null;
-                result['performer_types'] = [];
+                result['artist_types'] = [];
                 const familyIds = await query(
                     `
-                    SELECT family_id FROM families_performers
-                    WHERE performer_id = ${result.id} 
+                    SELECT family_id FROM families_artists
+                    WHERE artist_id = ${result.id} 
                     `
                 )
-                const performerTypesIds = await query(`
-                    SELECT performer_type_id FROM performers_performer_types
-                    WHERE performer_id = ${result.id}
+                const artistTypesIds = await query(`
+                    SELECT artist_type_id FROM artists_artist_types
+                    WHERE artist_id = ${result.id}
                 `)
                 if (familyIds && (familyIds as []).length > 0) {
                     const families = await Promise.all((familyIds as []).map(async(familyId: { family_id }) => {
@@ -40,15 +40,15 @@ const handler: NextApiHandler = async (req, res) => {
                     }))
                     result['families'] = families;
                 }
-                if (performerTypesIds && (performerTypesIds as []).length > 0) {
-                    const performerTypes = await Promise.all((performerTypesIds as []).map(async(performerTypeId: { performer_type_id }) => {
-                        const performerType = await query(`
-                            SELECT * FROM performer_types
-                            WHERE id = ${performerTypeId.performer_type_id }
+                if (artistTypesIds && (artistTypesIds as []).length > 0) {
+                    const artistTypes = await Promise.all((artistTypesIds as []).map(async(artistTypeId: { artist_type_id }) => {
+                        const artistType = await query(`
+                            SELECT * FROM artist_types
+                            WHERE id = ${artistTypeId.artist_type_id }
                         `)
-                        return performerType[0];
+                        return artistType[0];
                     }))
-                    result['performer_types'] = performerTypes;
+                    result['artist_types'] = artistTypes;
                 }
                 if (result.social_links_id) {
                     const socialLinks = await query(`

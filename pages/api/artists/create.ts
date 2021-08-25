@@ -3,7 +3,7 @@ import { query, generateSlug } from '../../../lib/db'
 import { getSession } from 'next-auth/client'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { name } = JSON.parse(req.body)
+    let { name, bio, tips = null, tipsLink = null, color = "#000000", image = null, socials = null } = JSON.parse(req.body)
     try {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
@@ -15,14 +15,16 @@ const handler: NextApiHandler = async (req, res) => {
         if (!name) {
             return res
                 .status(400)
-                .json({ message: '`name` are both required' })
+                .json({ message: '`name` is required' })
         } 
+        const slug = await generateSlug(name, 'artists');
+
         const results = await query(
             `
-                INSERT INTO performer_types (name)
-                VALUES (?)
+                INSERT INTO artists (user_id, name, bio, tips, tips_link, accent_color, slug, image_id, social_links_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
-            [name]
+            [session.id, name, bio, tips, tipsLink, color, slug, image, socials]
         )
         return res.json(results)
     } catch (e) {

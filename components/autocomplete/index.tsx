@@ -39,7 +39,7 @@ function Autocomplete({
                 controller = new AbortController();
                 signal = controller.signal;
                 getOptions(signal);
-            }, 1000)
+            }, 3000)
         } 
     }
 
@@ -57,7 +57,7 @@ function Autocomplete({
     const removeItem = (e) => {
         e.preventDefault();
         const target = e.target.classList.contains('icon') ? e.target.parentNode : e.target;
-        const updatedSelections = selections.filter((selection) => selection.id !== target.dataset.id);
+        const updatedSelections = selections.filter((selection) => Number(selection.id) !== Number(target.dataset.id));
         makeSelection(updatedSelections);
     }
 

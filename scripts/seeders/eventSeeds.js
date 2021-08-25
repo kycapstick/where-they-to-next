@@ -11,7 +11,6 @@ module.exports.seedEvents = () => {
         `;
 
         db.query(seedEvents, function (err, results, fields) {
-            console.log(results);
             if (err) {
                 return reject(err.message);
             }

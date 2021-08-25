@@ -5,16 +5,16 @@ import DashboardLists from '@/components/dashboard-lists';
 import { useEntries } from '@/lib/swr-hooks'
 
 export default function DashboardPage() {
-    const performers = useEntries('performers');
+    const artists = useEntries('artists');
     return (
         <>
             <Nav />
             <Container>
                 <DashboardLists 
-                    title="Performer"
-                    entries={performers.entries}
-                    isLoading={performers.isLoading}
-                    route="performers"
+                    title="Artist"
+                    entries={artists.entries}
+                    isLoading={artists.isLoading}
+                    route="artists"
                 />
             </Container>
         </>

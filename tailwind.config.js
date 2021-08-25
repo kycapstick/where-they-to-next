@@ -23,6 +23,9 @@ module.exports = {
                 },
                 pink: {
                     400: '#C98686'
+                },
+                error: {
+                    400: '#C80942',
                 }
             },
             inset: spacing,
@@ -38,14 +41,18 @@ module.exports = {
         borderColor: theme => ({
             ...theme('colors'),
         }),
+        flex: {
+            half: '0 0 calc((100% - 24px) / 2)',
+        }
     },
     variants: {
         inset: ['group-hover', 'hover'],
         padding: ['first'],
         textDecoration: ['group-hover', 'hover'],
         translate: ['group-hover'],
-        margin: ['nth-child-2'],
+        margin: ['nth-child-2', 'responsive'],
         backgroundColor: ['disabled', 'hover'],
+        opacity: ['group-hover']
     },
     plugins: [
         require('./plugins/icon'),

@@ -2,7 +2,7 @@ import { useSession } from 'next-auth/client'
 import ProfileModal from './modal'
 import EditButton from "@/components/buttons/edit";
 
-export default function ProfileTitle({ title, types, accentColor = '#000000', modal, owner = false, following = false  }) {
+export default function ProfileTitle({ title, types, slug, accentColor = '#000000', modal, owner = false, following = false  }) {
     const [ session, loading ] = useSession();
     return (
         <div>
@@ -23,7 +23,7 @@ export default function ProfileTitle({ title, types, accentColor = '#000000', mo
                     }
                     { owner && 
                         <EditButton 
-                            href="/"
+                            href={`/artists/edit/${slug}`}
                             accentColor={accentColor}
                         />  
                     }
@@ -35,7 +35,7 @@ export default function ProfileTitle({ title, types, accentColor = '#000000', mo
                 <ul className="pt-3 flex">
                     {
                         types.map((type, index) => (
-                            <li key={`performer-tag-${index}`} className="nth-child-2:ml-4" style={{color: accentColor}}>
+                            <li key={`artist-tag-${index}`} className="nth-child-2:ml-4" style={{color: accentColor}}>
                                 {/* TODO - Add link to events filtered by tag */}
                                 <a className="paragraph" href="#">{`#${type.name}`}</a>
                             </li>

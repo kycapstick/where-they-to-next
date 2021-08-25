@@ -5,14 +5,14 @@ const { usersUp, usersDown } = require('./migrations/userTable');
 // Primary Tables
 const { eventsUp, eventsDown } = require('./migrations/eventsTable');
 const { familiesUp, familiesDown } = require('./migrations/familiesTable');
-const { performersUp, performersDown } = require('./migrations/performersTable');
+const { artistsUp, artistsDown } = require('./migrations/artistsTable');
 const { venuesUp, venuesDown } = require('./migrations/venuesTable');
 
 // Shared Tables
 const { accessibilityUp, accessibilityDown } = require("./migrations/accessibilityTable");
 const { eventTypesUp, eventTypesDown } = require("./migrations/eventTypesTable");
 const { imagesUp, imagesDown } = require('./migrations/imagesTable');
-const { performerTypesUp, performerTypesDown } = require('./migrations/performerTypesTable');
+const { artistTypesUp, artistTypesDown } = require('./migrations/artistTypesTable');
 const { socialLinksUp, socialLinksDown } = require("./migrations/socialLinksTable");
 
 
@@ -22,18 +22,18 @@ const { accessibilityVenuesUp, accessibilityVenuesDown } = require('./migrations
 
 // Events Pivot Tables
 const { eventsFamiliesUp, eventsFamiliesDown } = require('./migrations/eventsFamiliesTable');
-const { eventsPerformersUp, eventsPerformersDown } = require('./migrations/eventsPerformersTable');
+const { eventsArtistsUp, eventsArtistsDown } = require('./migrations/eventsArtistsTable');
 const { eventsEventTypesUp, eventsEventTypesDown } = require('./migrations/eventsEventTypesTable');
 
 // Following Pivot Tables
 const { eventsUsersUp, eventsUsersDown } = require('./migrations/eventsUsersTable');
 const { familiesUsersUp, familiesUsersDown } = require('./migrations/familiesUsersTable');
-const { performersUsersUp, performersUsersDown } = require('./migrations/performersUsersTable');
+const { artistsUsersUp, artistsUsersDown } = require('./migrations/artistsUsersTable');
 const { usersVenuesUp, usersVenuesDown } = require('./migrations/usersVenuesTable');
 
-// Performers Pivot Tables
-const { familiesPerformersUp, familiesPerformersDown } = require('./migrations/familiesPerformersTable');
-const { performersPerformerTypesUp, performersPerformerTypesDown } = require('./migrations/performersPerformerTypesTable');
+// Artists Pivot Tables
+const { familiesArtistsUp, familiesArtistsDown } = require('./migrations/familiesArtistsTable');
+const { artistsArtistTypesUp, artistsArtistTypesDown } = require('./migrations/artistsArtistTypesTable');
 
 
 const up = () => {
@@ -41,7 +41,7 @@ const up = () => {
         try {
             let status = await usersUp();
             console.log(status);
-            status = await performersUp();
+            status = await artistsUp();
             console.log(status);
             status = await familiesUp();
             console.log(status);
@@ -57,7 +57,7 @@ const up = () => {
             console.log(status);
             status = await imagesUp();
             console.log(status);
-            status = await performerTypesUp();
+            status = await artistTypesUp();
             console.log(status);
             status = await socialLinksUp();
             console.log(status);
@@ -73,7 +73,7 @@ const up = () => {
             console.log(status);
             status = await eventsFamiliesUp();
             console.log(status);
-            status = await eventsPerformersUp();
+            status = await eventsArtistsUp();
             console.log(status);
 
             // Following Pivot Tables Up
@@ -81,15 +81,15 @@ const up = () => {
             console.log(status);
             status = await familiesUsersUp();
             console.log(status);
-            status = await performersUsersUp();
+            status = await artistsUsersUp();
             console.log(status);
             status = await usersVenuesUp();
             console.log(status);
 
-            // Performers Pivot Tables up 
-            status = await familiesPerformersUp();
+            // Artists Pivot Tables up 
+            status = await familiesArtistsUp();
             console.log(status);
-            status = await performersPerformerTypesUp();
+            status = await artistsArtistTypesUp();
             console.log(status);
             return resolve('All tables created.');
         } catch (err) {
@@ -102,10 +102,10 @@ const up = () => {
 const down = () => {
     return new Promise(async(resolve, reject) => {
         try {
-            // Performer Pivot Tables down
-            let status = await familiesPerformersDown();
+            // Artist Pivot Tables down
+            let status = await familiesArtistsDown();
             console.log(status);
-            status = await performersPerformerTypesDown();
+            status = await artistsArtistTypesDown();
             console.log(status);
             
             // Following Pivot Tables down
@@ -113,7 +113,7 @@ const down = () => {
             console.log(status);
             status = await familiesUsersDown();
             console.log(status);
-            status = await performersUsersDown();
+            status = await artistsUsersDown();
             console.log(status);
             status = await usersVenuesDown();
             console.log(status);
@@ -123,7 +123,7 @@ const down = () => {
             console.log(status);
             status = await eventsFamiliesDown();
             console.log(status);
-            status = await eventsPerformersDown();
+            status = await eventsArtistsDown();
             console.log(status);
 
             // Accessibility Tables down
@@ -139,7 +139,7 @@ const down = () => {
             console.log(status);
             status = await imagesDown();
             console.log(status);
-            status = await performerTypesDown();
+            status = await artistTypesDown();
             console.log(status);
             status = await socialLinksDown();
             console.log(status);
@@ -147,7 +147,7 @@ const down = () => {
             // Main Tables Down
             status = await venuesDown();
             console.log(status);
-            status = await performersDown();
+            status = await artistsDown();
             console.log(status);
             status = await familiesDown();
             console.log(status);

@@ -2,9 +2,11 @@ import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
 
 const { verifyUser } = require('../../../scripts/verifyUser');
+import { getSession } from 'next-auth/client'
+
 
 const handler: NextApiHandler = async (req, res) => {
-    const { user_id, id, name, bio = null, accent_color = "#000000", tips = null, image_url = null, image_alt = null } = req.body
+    const { id, name, bio = null, color = "#000000", tips = null, tipsLink = null, socials = null, image = null } = JSON.parse(req.body)
     try {
         if (req.method !== 'POST') {
             return res.status(401).json({ message: `This method is not allowed`});
@@ -14,21 +16,22 @@ const handler: NextApiHandler = async (req, res) => {
                 .status(400)
                 .json({ message: '`id` and `name` are both required' })
         }
-        if (!user_id) {
-            return res.status(401).json({ message: `You must be logged in to complete this action`});
+        const session = await getSession({ req });
+        if (!session) {
+            return res.status(404).json({ message: `You must be logged in`})
         }
-        const activeUser = await verifyUser(id, user_id, 'performers');
+        const activeUser = await verifyUser(id, session.id, 'artists');
         if (!activeUser) {
             return res.status(401).json({ message: `You are not authorized to update this entry`});
         }
 
         const results = await query(
             `
-                UPDATE performers
-                SET name = ?, bio = ?, accent_color = ?, tips = ?, image_url = ?, image_alt = ?
+                UPDATE artists
+                SET name = ?, bio = ?, accent_color = ?, tips = ?, tips_link = ?, image_id = ?, social_links_id = ?
                 WHERE id = ?
             `,
-            [name, bio, accent_color, tips, image_url, image_alt, id]
+            [name, bio, color, tips, tipsLink, image, socials, id]
         )
 
         return res.json(results)
