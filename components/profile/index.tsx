@@ -8,7 +8,6 @@ import SocialLinks from './socialLinks';
 import Headshot from '../Placeholder/Headshot';
 
 export default function Profile({ entry }) {
-    console.log(entry);
     const [ session, loading ] = useSession();
     const owner = entry.user_id && session && session.id && Number(entry.user_id) === Number(session.id)
     const { social_links } = entry;

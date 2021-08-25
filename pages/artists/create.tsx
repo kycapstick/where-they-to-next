@@ -1,5 +1,6 @@
 import { useSession } from 'next-auth/client'
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 // Components
 import Nav from '@/components/nav'
@@ -14,6 +15,8 @@ import Tips from '@/components/tips-input';
 import SocialLinks from '@/components/social-links';
 
 export default function DashboardPage() {
+    const router = useRouter();
+
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
     const [ image, setImage ] = useState(null);
@@ -81,33 +84,38 @@ export default function DashboardPage() {
     }
 
     const createArtist = async(socials) => {
-        try {
-            const response = await fetch(`/api/artists/create`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    name, 
-                    bio,
-                    tips,
-                    tipsLink,
-                    image: image && image.id ? image.id : null,
-                    color,
-                    socials
+        return new Promise(async(resolve, reject) => {
+            try {
+                const response = await fetch(`/api/artists/create`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name, 
+                        bio,
+                        tips,
+                        tipsLink,
+                        image: image && image.id ? image.id : null,
+                        color,
+                        socials
+                    })
                 })
-            })
-            const result = await response.json();
-            const { insertId } = result;
-            if (insertId) {
-                if (family && family.length > 0) {
-                    await createFamilyRelationships(insertId);
+                const result = await response.json();
+                const { insertId } = result;
+                if (insertId) {
+                    if (family && family.length > 0) {
+                        await createFamilyRelationships(insertId);
+                    }
+                    if (types && types.length > 0) {
+                        await createArtistTypesRelationships(insertId);
+                    }
                 }
-                if (types && types.length > 0) {
-                    await createArtistTypesRelationships(insertId);
-                }
+                
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
             }
-
-        } catch(err) {
-            console.log(err);
-        }
+        })
+    
     }
 
     const createSocialLinksId = () => {
@@ -148,7 +156,8 @@ export default function DashboardPage() {
             if (!socialLinksId) {
                 socials = await createSocialLinksId();
             }
-            createArtist(socials);
+            await createArtist(socials);
+            router.push('/dashboard');
         } catch(err) {
             console.log(err)
         }

@@ -13,9 +13,9 @@ export default function dashboardList(props) {
                         ? 
                             <li>Loading</li> 
                         :
-                        entries.map((entry) => {
+                        entries.map((entry, i) => {
                             return (
-                                <li>
+                                <li key={`${route}-${i}`}>
                                     <Link href={`/${route}/profile/${entry.slug}`}>
                                         {entry.name}
                                     </Link>

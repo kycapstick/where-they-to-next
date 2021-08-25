@@ -32,7 +32,6 @@ function Autocomplete({
     const handleChange = (value) => {
         setValue(value);
         setOptions([]);
-        console.log(value)
         if (value && value.length > 2) {
             clearTimeout(timeOutId);
             controller.abort();

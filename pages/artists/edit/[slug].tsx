@@ -1,5 +1,6 @@
 import { useSession } from 'next-auth/client'
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 import Nav from '@/components/nav'
 import Container from '@/components/container'
@@ -14,17 +15,19 @@ import SocialLinks from '@/components/social-links';
 import BlockButton from '@/components/buttons/block';
 
 
-export default function EditArtistPage({ artist }) {
+export default function EditArtistPage({ artist, slug }) {
+    const router = useRouter();
+
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-    const [ image, setImage ] = useState(artist.image);
-    const [ name, setName ] = useState(artist.name);
-    const [ bio, setBio ] = useState(artist.bio);
-    const [ family, setFamily ] = useState(artist.families) 
+    const [ image, setImage ] = useState(artist.image || '');
+    const [ name, setName ] = useState(artist.name || '');
+    const [ bio, setBio ] = useState(artist.bio || '');
+    const [ family, setFamily ] = useState(artist.families || []) 
     const [ types, setTypes ] = useState(artist.artist_types ? artist.artist_types : []);
-    const [ color, setColor ] = useState(artist.accent_color);
-    const [ tips, setTips ] = useState(artist.tips);
-    const [ tipsLink, setTipsLink ] = useState(artist.tips_link);
+    const [ color, setColor ] = useState(artist.accent_color || '');
+    const [ tips, setTips ] = useState(artist.tips || '');
+    const [ tipsLink, setTipsLink ] = useState(artist.tips_link || '');
 
     // Social Links
     const [socialLinksId, setSocialLinksId ] = useState(artist.social_links_id);
@@ -36,18 +39,17 @@ export default function EditArtistPage({ artist }) {
     const [ website, setWebsite ] = useState(artist.social_links ? artist.social_links.website : '');
     const [ youtube, setYouTube ] = useState(artist.social_links ? artist.social_links.youtube : '');
 
-    const createArtistTypesRelationships = async(artistId) => {
+    const updateArtistTypeRelationships = async(artistTypes, route) => {
         return new Promise(async(resolve, reject) => {
             try {
-                await Promise.all(types.map(async(type) => {
-                    const response = await fetch(`/api/artists_artist_types/create`, {
+                await Promise.all(artistTypes.map(async(type) => {
+                    await fetch(`/api/artists_artist_types/${route}`, {
                         method: 'POST',
                         body: JSON.stringify({
                             artistTypeId: type.id,
-                            artistId
+                            artistId: artist.id,
                         })
                     })
-                    const result = await response.json();
                     return type;
                 }))
                 return resolve(true);
@@ -62,7 +64,7 @@ export default function EditArtistPage({ artist }) {
         return new Promise(async (resolve, reject) => {
             try {
                 await Promise.all(families.map(async(family) => {
-                    const response = await fetch(`/api/family_artists/${route}`, {
+                    await fetch(`/api/family_artists/${route}`, {
                         method: 'POST',
                         body: JSON.stringify({
                             familyId: family.id,
@@ -98,28 +100,53 @@ export default function EditArtistPage({ artist }) {
                 return reject(err);
             }
         })
-
     }
 
-    const createArtist = async(socials) => {
-        try {
-            const response = await fetch(`/api/artists/edit`, {
-                method: 'POST',
-                body: JSON.stringify({
-                    id: artist.id,
-                    name, 
-                    bio,
-                    tips,
-                    tipsLink,
-                    image: image && image.id ? image.id : null,
-                    color,
-                    socials
+    const handleArtistTypes = () => {
+        return new Promise(async(resolve, reject) => {
+            const currentArtistTypeIds = artist.artist_types.map((type) => type.id);
+            const newArtistTypeIds = types.map((type) => type.id);
+            const newArtistTypes = types.filter((type) => currentArtistTypeIds.indexOf(type.id) === -1);
+            const removedArtistTypes = artist.artist_types.filter((type) => newArtistTypeIds.indexOf(type.id) === -1);
+            try {
+                if (newArtistTypes && newArtistTypes.length > 0) {
+                    await updateArtistTypeRelationships(newArtistTypes, 'create');
+                }
+                if (removedArtistTypes && removedArtistTypes.length > 0) {
+                    await updateArtistTypeRelationships(removedArtistTypes, 'delete')
+                }
+                return resolve(true)
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
+    }
+
+    const editArtist = async(socials) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const response = await fetch(`/api/artists/edit`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: artist.id,
+                        name, 
+                        bio,
+                        tips,
+                        tipsLink,
+                        image: image && image.id ? image.id : null,
+                        color,
+                        socials
+                    })
                 })
-            })
-            await handleFamilies()
-        } catch(err) {
-            console.log(err);
-        }
+                await handleFamilies()
+                await handleArtistTypes();
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
     }
 
     const createSocialLinksId = () => {
@@ -160,7 +187,8 @@ export default function EditArtistPage({ artist }) {
             if (!socialLinksId) {
                 socials = await createSocialLinksId();
             }
-            createArtist(socials);
+            await editArtist(socials);
+            router.push(`/artists/profile/${slug}`)
         } catch(err) {
             console.log(err)
         }
@@ -271,7 +299,7 @@ export default function EditArtistPage({ artist }) {
                                 <BlockButton 
                                     handleClick={() => {}}
                                     accentColor={color}
-                                    text="Edit Profile"
+                                    text="Update Profile"
                                     type="submit"
                                 />
                             </div>
@@ -292,5 +320,6 @@ EditArtistPage.getInitialProps = async (cxt) => {
     const response = await result.json();
     return {
         artist: response[0],
+        slug,
     }
 }

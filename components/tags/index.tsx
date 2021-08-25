@@ -28,7 +28,6 @@ export default function Tags({ name, label, type, selections, makeSelection, acc
     const removeItem = (e) => {
         e.preventDefault();
         const target = e.target.classList.contains('icon') ? e.target.parentNode : e.target;
-        console.log(selections);
         const updatedSelections = selections.filter((selection) => Number(selection.id) !== Number(target.dataset.id));
         makeSelection(updatedSelections);
     }
