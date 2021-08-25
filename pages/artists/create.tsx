@@ -32,7 +32,6 @@ export default function DashboardPage() {
     const [socialLinksId, setSocialLinksId ] = useState(null);
     const [ facebook, setFacebook ] = useState('');
     const [ instagram, setInstagram ] = useState('');
-    const [ tiktok, setTiktok ] = useState('');
     const [ twitch, setTwitch ] = useState('');
     const [ twitter, setTwitter ] = useState('');
     const [ website, setWebsite ] = useState('');
@@ -127,7 +126,6 @@ export default function DashboardPage() {
                         name,
                         facebook,
                         instagram,
-                        tiktok, 
                         twitch,
                         twitter,
                         website,
@@ -229,6 +227,7 @@ export default function DashboardPage() {
                             />
                             <Tags 
                                 name="tags"
+                                accentColor={color}
                                 label="Add artist tags"
                                 type="artist_types"
                                 selections={types}
@@ -251,8 +250,6 @@ export default function DashboardPage() {
                                 setFacebook={setFacebook}
                                 instagram={instagram}
                                 setInstagram={setInstagram}
-                                tiktok={tiktok}
-                                setTiktok={setTiktok}
                                 twitch={twitch}
                                 setTwitch={setTwitch}
                                 twitter={twitter}
