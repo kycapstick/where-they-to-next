@@ -1,6 +1,7 @@
 import { useSession } from 'next-auth/client'
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import absoluteUrl from 'next-absolute-url'
 
 import Nav from '@/components/nav'
 import Container from '@/components/container'
@@ -310,10 +311,10 @@ export default function EditArtistPage({ artist, slug }) {
     )
 }
 
-EditArtistPage.getInitialProps = async (cxt) => {
-    const { slug } = cxt.query;
-    console.log(cxt.req.headers);
-    const result = await fetch(`http://${cxt.req.headers.host}/api/artists/single?slug=${slug}`);
+EditArtistPage.getInitialProps = async ({ query, req }) => {
+    const { slug } = query;
+    const { origin } = absoluteUrl(req);
+    const result = await fetch(`${origin}/api/artists/single?slug=${slug}`);
     const response = await result.json();
     return {
         artist: response[0],
