@@ -7,7 +7,7 @@ const handler: NextApiHandler = async (req, res) => {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
         }
-        let { name, facebook, instagram, tiktok, twitch, twitter, website, youtube } = JSON.parse(req.body)
+        let { name, facebook, instagram, twitch, twitter, website, youtube } = JSON.parse(req.body)
         const session = await getSession({ req });
         if (!session) {
             return res.status(404).json({ message: `You must be logged in`})
@@ -15,10 +15,10 @@ const handler: NextApiHandler = async (req, res) => {
 
         const results = await query(
             `
-                INSERT INTO social_links (user_id, name, facebook, instagram, tiktok, twitch, twitter, website, youtube)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO social_links (user_id, name, facebook, instagram, twitch, twitter, website, youtube)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `,
-            [session.id, name, facebook, instagram, tiktok, twitch, twitter, website, youtube]
+            [session.id, name, facebook, instagram, twitch, twitter, website, youtube]
         )
         return res.json(results)
     } catch (e) {
