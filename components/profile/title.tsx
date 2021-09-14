@@ -2,7 +2,7 @@ import { useSession } from 'next-auth/client'
 import ProfileModal from './modal'
 import EditButton from "@/components/buttons/edit";
 
-export default function ProfileTitle({ title, types, slug, accentColor = '#000000', modal, owner = false, following = false  }) {
+export default function ProfileTitle({ title, types, slug, accentColor = '#000000', modal, owner = false, route, following = false  }) {
     const [ session, loading ] = useSession();
     return (
         <div>
@@ -23,7 +23,7 @@ export default function ProfileTitle({ title, types, slug, accentColor = '#00000
                     }
                     { owner && 
                         <EditButton 
-                            href={`/artists/edit/${slug}`}
+                            href={`/${route}/edit/${slug}`}
                             accentColor={accentColor}
                         />  
                     }
