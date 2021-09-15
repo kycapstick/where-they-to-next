@@ -31,7 +31,7 @@ export default function DashboardPage() {
                     route="artists"
                 />
                 <DashboardLists 
-                    title="Family"
+                    title="Families"
                     entries={families.entries}
                     isLoading={families.isLoading}
                     route="families"
