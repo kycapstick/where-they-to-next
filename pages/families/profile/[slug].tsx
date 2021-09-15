@@ -15,7 +15,8 @@ export default function DashboardPage() {
             <Container>
             { entry && entry[0] && !isLoading &&
                 <Profile 
-                    entry={entry[0]} 
+                    entry={entry[0]}
+                    route="families" 
                 />
             }
             { !isLoading && entry && !entry.length && 

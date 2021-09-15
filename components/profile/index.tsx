@@ -2,12 +2,14 @@ import ProfileTitle from './title';
 import { useSession } from 'next-auth/client'
 import Image from 'next/image';
 
+import Artists from './artists';
 import Families from './families';
+
 import FollowButton from '@/components/follow-button';
 import SocialLinks from './socialLinks';
 import Headshot from '../Placeholder/Headshot';
 
-export default function Profile({ entry }) {
+export default function Profile({ entry, route = 'artists' }) {
     const [ session, loading ] = useSession();
     const owner = entry.user_id && session && session.id && Number(entry.user_id) === Number(session.id)
     const { social_links } = entry;
@@ -21,13 +23,14 @@ export default function Profile({ entry }) {
                         types={entry.artist_types}
                         slug={entry.slug}
                         accentColor={entry.accent_color}
+                        route={route}
                         modal={entry.tips || entry.tips_link ? { type: 'tips', title: `Tip ${entry.name}`, description: entry.tips, link: entry.tips_link } : { type: null, title: null, description: null, link: null } }
                     />
                     {
                         session && session.id &&
                         <div className="mt-6">
                             <FollowButton 
-                                route="artists"
+                                route={route}
                                 accentColor={entry.accent_color}
                                 entry_id={entry.id}
                                 user_id={session.id}
@@ -35,6 +38,12 @@ export default function Profile({ entry }) {
                         </div>
                     }
                     <div className={`mt-8`}>
+                        {
+                            entry.artists && entry.artists.length > 0 &&
+                            <div className={`bg-grey-10 p-6 ${session && session.id ? 'mt-4' : ''}`}> 
+                                <Artists artists={entry.artists} />
+                            </div>
+                        }
                         {
                             entry.families && entry.families.length > 0 &&
                             <div>
@@ -48,6 +57,13 @@ export default function Profile({ entry }) {
                             <div className="mt-8">
                                 <h2 className="h4">Bio</h2>
                                 <p className="paragraph mt-4">{entry.bio}</p>
+                            </div>
+                        }
+                        {
+                            entry.description &&                        
+                            <div className="mt-8">
+                                <h2 className="h4">About</h2>
+                                <p className="paragraph mt-4">{entry.description}</p>
                             </div>
                         }
                         { 
