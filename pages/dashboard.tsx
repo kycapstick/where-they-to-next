@@ -6,6 +6,7 @@ import { useEntries } from '@/lib/swr-hooks'
 
 export default function DashboardPage() {
     const artists = useEntries('artists');
+    const families = useEntries('families');
     return (
         <>
             <Nav />
@@ -15,6 +16,12 @@ export default function DashboardPage() {
                     entries={artists.entries}
                     isLoading={artists.isLoading}
                     route="artists"
+                />
+                <DashboardLists 
+                    title="Families"
+                    entries={families.entries}
+                    isLoading={families.isLoading}
+                    route="families"
                 />
             </Container>
         </>

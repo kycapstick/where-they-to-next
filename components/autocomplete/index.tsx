@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import Input from '@/components/text-input';
 import Families from './families';
+import Artists from './artists';
 
 function Autocomplete({
     makeSelection,
@@ -66,6 +67,13 @@ function Autocomplete({
             {
                 type === 'families' &&
                 <Families 
+                    entries={selections}
+                    removeItem={removeItem}
+                />
+            }
+            {
+                type === 'artists' &&
+                <Artists 
                     entries={selections}
                     removeItem={removeItem}
                 />
