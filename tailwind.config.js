@@ -7,6 +7,9 @@ module.exports = {
     // },
     // purge: ['./components/**/*.{js,ts,jsx,tsx}', './pages/**/*.{js,ts,jsx,tsx}'],
     theme: {
+        flex: {
+            half: '0 0 calc(50% - 16px)', 
+        },
         extend: {
             colors: {
                 'accent-1': '#333',

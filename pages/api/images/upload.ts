@@ -14,10 +14,8 @@ export const config = {
 const optimizeImage = (file) => {
     return new Promise(async (resolve, reject) => {
         tinify.key = process.env.TINIFY_API_KEY;
-        console.log(tinify.key);
         try {
             tinify.fromBuffer(file).toBuffer(function(err, resultData) {
-                console.log(resultData);
                 if (err) {
                     return reject(err);
                 }
