@@ -48,7 +48,7 @@ export default function ImageUploader({ user_id, setImage, image }) {
                         <div className="absolute inset-0">
                             <div className="flex justify-center">
                                 <Image 
-                                    src={ image.url } 
+                                    src={ `${decodeURI(image.url)}` } 
                                     alt=""
                                     height={ 350 }
                                     width={ 350 }

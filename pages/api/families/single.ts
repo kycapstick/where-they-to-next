@@ -32,7 +32,7 @@ const handler: NextApiHandler = async (req, res) => {
                                 const id = artist?.artist_id ? artist.artist_id : null;
                                 if (id) {
                                     const artistObj = await query(`
-                                        SELECT image_id, slug, name, accent_color  FROM artists
+                                        SELECT image_id, id, slug, name, accent_color  FROM artists
                                         WHERE id = ${artist.artist_id}
                                     `) 
                                     if ((artistObj as []).length > 0 && artistObj[0]?.image_id) {
