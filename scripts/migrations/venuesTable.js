@@ -9,6 +9,7 @@ module.exports.venuesUp = () => {
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             slug VARCHAR(255) NOT NULL,
+                            digital BOOLEAN,
                             name TEXT NOT NULL,
                             address TEXT NOT NULL,
                             city TEXT NOT NULL,
