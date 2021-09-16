@@ -36,39 +36,45 @@ export default async (req, res) => {
         region: 'nyc3',
     })
     const form = new formidable.IncomingForm();
-    form.maxFileSize = 5 * 1024 * 1024;
+    form.maxFileSize = 200 * 1024 * 1024;
     try {
         const response = await new Promise((resolve, reject) => {
-            form.parse(req, async(err, fields, files) => {
-                if (err || !fields.user_id) return res.status(500);
-                const file = fs.readFileSync(files.file.path);
-                try {
+            try {
+                form.parse(req, async(err, fields, files) => {
+                    if (err || !fields.user_id) {
+                        console.log(err);
+                        res.status(501).json({ message: 'Something went wrong'})
+                        return reject();
+                    }
+                    const file = fs.readFileSync(files.file.path);
                     const fileName = files.file.name.replace(' ', '-');
                     const optimizedFile = await optimizeImage(file);
                     const { Location } = await s3.upload({
-                        Bucket: process.env.DO_SPACES_BUCKET,
-                        ACL: 'public-read',
-                        Key: `${fields.user_id}/${fileName}`,
-                        Body: optimizedFile, 
-                        ContentType: 'image/jpeg'
+                            Bucket: process.env.DO_SPACES_BUCKET,
+                            ACL: 'public-read',
+                            Key: `${fields.user_id}/${fileName}`,
+                            Body: optimizedFile, 
+                            ContentType: 'image/jpeg'
                     }).promise();
                     if (!Location) {
                         res.status(501).json({ message: 'Something went wrong'})
                     }
                     const results = await query(
-                        `
-                            INSERT INTO images(name, url, user_id)
-                            VALUES(?,?,?)
-                        `,
-                        [files.file.name, Location, fields.user_id]
-                    )
-                    // @ts-ignore
-                    return resolve({ id: results.insertId, url: Location })    
-                } catch(error) {
-                    console.log(error);
-                    return reject(error);
-                }
-            });
+                    `
+                        INSERT INTO images(name, url, user_id)
+                        VALUES(?,?,?)
+                    `,
+                    [files.file.name, Location, fields.user_id]
+                )
+                // @ts-ignore
+                return resolve({ id: results.insertId, url: Location })    
+
+                });
+            } catch(error) {
+                console.log(error);
+                res.status(500)
+                return reject(error);
+            }
         });
         res.status(200).json( { response });
     } catch(err) {

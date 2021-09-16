@@ -1,6 +1,7 @@
 import DynamicIcon from '@/components/icons/DynamicIcon';
 
 export default function Artists({ entries, removeItem }) {
+    console.log(entries);
     return (
         <div className="mt-8">
             <h2 className="text-center h3">Artists</h2>
