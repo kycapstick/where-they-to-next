@@ -10,6 +10,7 @@ import TextInput from '@/components/text-input';
 import Textarea from '@/components/textarea';
 import Address from '@/components/address';
 import ColorPicker from '@/components/color-picker';
+import Accessibility from '@/components/accessibility';
 import SocialLinks from '@/components/social-links';
 
 
@@ -18,10 +19,10 @@ export default function CreateVenue() {
 
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-    const [ image, setImage ] = useState(null);
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ color, setColor ] = useState('#000000');
+    const [ image, setImage ] = useState(null);
 
     // Address
     const [ address, setAddress ] = useState('');
@@ -29,6 +30,10 @@ export default function CreateVenue() {
     const [ city, setCity ] = useState('')
     const [ province, setProvince ] = useState('');
     const [ postalCode, setPostalCode] = useState('');
+
+    // Accessibility
+    const [ accessibility, setAccessibility ] = useState([]);
+    const [ accessibilityDescription, setAccessibilityDescription ] = useState('');
 
     // Social Links
     const [socialLinksId, setSocialLinksId ] = useState(null);
@@ -39,27 +44,55 @@ export default function CreateVenue() {
     const [ website, setWebsite ] = useState('');
     const [ youtube, setYouTube ] = useState('');
 
+    const createAccessibilityRelationships = async(venueId) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                await Promise.all(accessibility.map(async(feature) => {
+                    const response = await fetch(`/api/accessibility_venues/create`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            venueId,
+                            accessibilityId: feature,
+                        })
+                    })
+                    const result = await response.json();
+                    return feature;
+                }))
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        });
+    }
+
     const createVenue = async(socials) => {
         return new Promise(async(resolve, reject) => {
             try {
-                const response = await fetch(`/api/families/create`, {
+                const response = await fetch(`/api/venues/create`, {
                     method: 'POST',
                     body: JSON.stringify({
                         name, 
                         description,
                         image: image && image.id ? image.id : null,
                         color,
-                        socials
+                        socials,
+                        digital,
+                        address,
+                        city, 
+                        province,
+                        accessibilityDescription
                     })
                 })
                 const result = await response.json();
                 const { insertId } = result;
-                // if (insertId) {
-                //     if (artists && artists.length > 0) {
-                //         await createArtistRelationships(insertId);
-                //     }
+                console.log(insertId);
+                if (insertId) {
+                    if (accessibility && accessibility.length > 0) {
+                        await createAccessibilityRelationships(insertId);
+                    }
 
-                // }
+                }
                 
                 return resolve(true);
             } catch(err) {
@@ -179,7 +212,6 @@ export default function CreateVenue() {
                                 setPostalCode={setPostalCode}
                                 checkErrors={checkErrors}
                             />
-                            
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
                                 image={image}
@@ -190,6 +222,12 @@ export default function CreateVenue() {
                                 setValue={setColor}
                                 errors={errors}
                                 setErrors={setErrors}
+                            />
+                            <Accessibility 
+                                features={accessibility}
+                                setFeatures={setAccessibility}
+                                accessibilityDescription={accessibilityDescription}
+                                setAccessibilityDescription={setAccessibilityDescription}
                             />
                             <SocialLinks 
                                 facebook={facebook}

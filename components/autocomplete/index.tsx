@@ -59,7 +59,6 @@ function Autocomplete({
         e.preventDefault();
         const target = e.target.classList.contains('icon') ? e.target.parentNode : e.target;
         const updatedSelections = selections.filter((selection) => Number(selection.id) !== Number(target.dataset.id));
-        console.log(target);
         makeSelection(updatedSelections);
     }
 

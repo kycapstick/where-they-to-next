@@ -46,6 +46,7 @@ module.exports = {
         }),
         flex: {
             half: '0 0 calc((100% - 24px) / 2)',
+            'one-third': '0 0 calc((100% - 32px) / 3)',
         }
     },
     variants: {
@@ -53,7 +54,7 @@ module.exports = {
         padding: ['first'],
         textDecoration: ['group-hover', 'hover'],
         translate: ['group-hover'],
-        margin: ['nth-child-2', 'responsive'],
+        margin: ['nth-child-2', 'nth-child-4', 'responsive'],
         backgroundColor: ['disabled', 'hover'],
         opacity: ['group-hover']
     },
