@@ -23,14 +23,14 @@ export default function Address({ entry }) {
                             
                         }
                         {
-                            (entry.city || entry.province) && 
+                            (entry.city || entry.province) && !entry.digital && 
                             <span className="block">{entry.city ? `${entry.city}` : ''}{entry.city && entry.province && ', '}{entry.province ? entry.province : ''}</span>
                         }
                     </p>
                 </div>
             </div>
             {
-                (entry.accessibility || entry.accessibility_description) &&
+                ((entry.accessibility && entry.accessibility.length > 0) || entry.accessibility_description) &&
                 <div className="flex mt-6">
                     <div className="paragraph mr-5" style={{ color: entry.accent_color }}>
                         <DynamicIcon 
