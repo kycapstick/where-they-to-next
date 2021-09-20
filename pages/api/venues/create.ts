@@ -3,7 +3,7 @@ import { generateSlug, query } from '../../../lib/db'
 import { getSession } from 'next-auth/client'
 
 const handler: NextApiHandler = async (req, res) => {
-    const { name, address, city, province, color = '#000000', accessibility_description = null, description = null, image = null } = JSON.parse(req.body)
+    const { digital, name, address, city, province, color = '#000000', accessibility_description = null, description = null, image = null, socials } = JSON.parse(req.body)
 
     try {
         if (req.method !== 'POST') {
@@ -23,10 +23,10 @@ const handler: NextApiHandler = async (req, res) => {
 
         const results = await query(
             `
-                INSERT INTO venues (user_id, name, address, province, city, description, accent_color, accessibility_description, slug, image_id)
-                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?, ?)
+                INSERT INTO venues (user_id, digital, name, address, province, city, description, accent_color, accessibility_description, slug, image_id, social_links_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?)
             `,
-            [session.id, name, address, province, city, description, color, accessibility_description, slug, image ]
+            [session.id, digital, name, address, province, city, description, color, accessibility_description, slug, image, socials ]
         )
         return res.json(results)
     } catch (e) {

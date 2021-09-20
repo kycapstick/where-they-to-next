@@ -4,6 +4,7 @@ import Image from 'next/image';
 
 import Artists from './artists';
 import Families from './families';
+import Address from './address';
 
 import FollowButton from '@/components/follow-button';
 import SocialLinks from './socialLinks';
@@ -53,6 +54,14 @@ export default function Profile({ entry, route = 'artists' }) {
                             </div>
                         }
                         {
+                            entry.address &&
+                            <div className={`bg-grey-10 p-6 ${session && session.id ? 'mt-4' : ''}`}> 
+                                <Address 
+                                    entry={ entry }
+                                />
+                            </div>
+                        }
+                        {
                             entry.bio &&                        
                             <div className="mt-8">
                                 <h2 className="h4">Bio</h2>
@@ -81,10 +90,10 @@ export default function Profile({ entry, route = 'artists' }) {
                     entry.image && entry.image.url ?
                         <div>
                             <Image 
-                                src={entry.image.url}
+                                src={decodeURI(entry.image.url)}
                                 height={739}
                                 width={739}
-                                objectFit="cover"
+                                objectFit="contain"
                             />
                         </div>
                         : 
