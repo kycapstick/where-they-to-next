@@ -8,24 +8,32 @@ import Container from '@/components/container'
 import ImageUploader from '@/components/image-uploader';
 import TextInput from '@/components/text-input';
 import Textarea from '@/components/textarea';
-import Autocomplete from '@/components/autocomplete';
-import Tags from '@/components/tags';
+import Address from '@/components/address';
 import ColorPicker from '@/components/color-picker';
-import Tips from '@/components/tips-input';
+import Accessibility from '@/components/accessibility';
 import SocialLinks from '@/components/social-links';
 
-export default function DashboardPage() {
+
+export default function CreateVenue() {
     const router = useRouter();
 
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-    const [ image, setImage ] = useState(null);
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
-    const [ artists, setArtists ] = useState([]) 
     const [ color, setColor ] = useState('#000000');
-    const [ tips, setTips ] = useState('');
-    const [ tipsLink, setTipsLink ] = useState('');
+    const [ image, setImage ] = useState(null);
+
+    // Address
+    const [ address, setAddress ] = useState('');
+    const [ digital, setDigital ] = useState(false);
+    const [ city, setCity ] = useState('')
+    const [ province, setProvince ] = useState('');
+    const [ postalCode, setPostalCode] = useState('');
+
+    // Accessibility
+    const [ accessibility, setAccessibility ] = useState([]);
+    const [ accessibilityDescription, setAccessibilityDescription ] = useState('');
 
     // Social Links
     const [socialLinksId, setSocialLinksId ] = useState(null);
@@ -36,50 +44,52 @@ export default function DashboardPage() {
     const [ website, setWebsite ] = useState('');
     const [ youtube, setYouTube ] = useState('');
 
-
-    const createArtistRelationships = async(familyId) => {
-        return new Promise(async (resolve, reject) => {
+    const createAccessibilityRelationships = async(venueId) => {
+        return new Promise(async(resolve, reject) => {
             try {
-                await Promise.all(artists.map(async(artist) => {
-                    const response = await fetch(`/api/family_artists/create`, {
+                await Promise.all(accessibility.map(async(feature) => {
+                    const response = await fetch(`/api/accessibility_venues/create`, {
                         method: 'POST',
                         body: JSON.stringify({
-                            familyId,
-                            artistId: artist.id,
+                            venueId,
+                            accessibilityId: feature,
                         })
                     })
                     const result = await response.json();
-                    return artist;
-                }));
+                    return feature;
+                }))
                 return resolve(true);
-            } catch (err) {
+            } catch(err) {
                 console.log(err);
                 return reject(err);
             }
-        })
-        
+        });
     }
 
-    const createFamily = async(socials) => {
+    const createVenue = async(socials) => {
         return new Promise(async(resolve, reject) => {
             try {
-                const response = await fetch(`/api/families/create`, {
+                const response = await fetch(`/api/venues/create`, {
                     method: 'POST',
                     body: JSON.stringify({
                         name, 
                         description,
-                        tips,
-                        tipsLink,
                         image: image && image.id ? image.id : null,
                         color,
-                        socials
+                        socials,
+                        digital,
+                        address,
+                        city, 
+                        province,
+                        accessibilityDescription
                     })
                 })
                 const result = await response.json();
                 const { insertId } = result;
+                console.log(insertId);
                 if (insertId) {
-                    if (artists && artists.length > 0) {
-                        await createArtistRelationships(insertId);
+                    if (accessibility && accessibility.length > 0) {
+                        await createAccessibilityRelationships(insertId);
                     }
 
                 }
@@ -130,7 +140,7 @@ export default function DashboardPage() {
             if (!socialLinksId) {
                 socials = await createSocialLinksId();
             }
-            await createFamily(socials);
+            await createVenue(socials);
             router.push('/dashboard');
         } catch(err) {
             console.log(err)
@@ -139,7 +149,7 @@ export default function DashboardPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const requiredFields = [{name: 'name', value: name }];
+        const requiredFields = [{name: 'name', value: name }, { name: 'address', value: address }];
         const checkedFields = requiredFields.filter((field) => !field.value || field.value === '');
         if (checkedFields.length > 0) {
             return setErrors(checkedFields);
@@ -172,7 +182,7 @@ export default function DashboardPage() {
                 }
                 { session && session.id ?
                     <>
-                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Create a <span className="block h1">Family Profile</span></h1>                
+                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Create a <span className="block h1">Venue Profile</span></h1>                
                         <form action="" onSubmit={handleSubmit}>
                             <div className="py-6">
                                 <TextInput 
@@ -189,17 +199,23 @@ export default function DashboardPage() {
                                 value={description}
                                 onChange={setDescription}
                             />
+                            <Address 
+                                digital={digital}
+                                setDigital={setDigital}
+                                address={address}
+                                setAddress={setAddress}
+                                city={city}
+                                setCity={setCity}
+                                province={province}
+                                setProvince={setProvince}
+                                postalCode={postalCode}
+                                setPostalCode={setPostalCode}
+                                checkErrors={checkErrors}
+                            />
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
                                 image={image}
                                 setImage={ setImage }
-                            />
-                            <Autocomplete 
-                                name="artists"
-                                label="Artists"
-                                type="artists"
-                                selections={artists}
-                                makeSelection={setArtists}
                             />
                             <ColorPicker 
                                 value={color}
@@ -207,11 +223,11 @@ export default function DashboardPage() {
                                 errors={errors}
                                 setErrors={setErrors}
                             />
-                            <Tips 
-                                tips={tips}
-                                tipsLink={tipsLink}
-                                setTips={setTips}
-                                setTipsLink={setTipsLink}
+                            <Accessibility 
+                                features={accessibility}
+                                setFeatures={setAccessibility}
+                                accessibilityDescription={accessibilityDescription}
+                                setAccessibilityDescription={setAccessibilityDescription}
                             />
                             <SocialLinks 
                                 facebook={facebook}
@@ -229,7 +245,7 @@ export default function DashboardPage() {
                                 socialLinksId={socialLinksId}
                                 setSocialLinksId={setSocialLinksId}
                             />
-                            <input type="submit" value="Create Family" className="border-2 px-6 py-4" style={{ borderColor: color }}/>
+                            <input type="submit" value="Create Venue" className="border-2 px-6 py-4" style={{ borderColor: color }}/>
                         </form>
                     </> 
                     : 

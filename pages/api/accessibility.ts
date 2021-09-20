@@ -7,17 +7,9 @@ const handler: NextApiHandler = async (req, res) => {
         if (req.method !== 'GET') {
             return res.status(401).json({ message: `This method is not allowed`});
         }
-        if (req.method !== 'GET') {
-            return res.status(401).json({ message: `This method is not allowed`});
-        }
-        const session = await getSession({ req });
-        if (!session) {
-            return res.status(404).json({ message: `You must be logged in`})
-        } 
         const results = await query(
             `
-                SELECT * FROM venues
-                WHERE user_id = ${session.id}
+                SELECT * FROM accessibility
             `,
         )
         return res.json(results)

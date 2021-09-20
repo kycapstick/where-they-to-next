@@ -9,6 +9,7 @@ export default function DashboardPage() {
     const [ session, loading ] = useSession();
     const artists = useEntries('artists');
     const families = useEntries('families');
+    const venues = useEntries('venues');
     if (!session) {
         return (
             <>
@@ -35,6 +36,12 @@ export default function DashboardPage() {
                     entries={families.entries}
                     isLoading={families.isLoading}
                     route="families"
+                />
+                <DashboardLists 
+                    title="Venues"
+                    entries={venues.entries}
+                    isLoading={venues.isLoading}
+                    route="venues"
                 />
             </Container>
         </>

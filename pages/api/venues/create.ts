@@ -1,30 +1,32 @@
 import { NextApiHandler } from 'next'
 import { generateSlug, query } from '../../../lib/db'
+import { getSession } from 'next-auth/client'
 
 const handler: NextApiHandler = async (req, res) => {
-    const { user_id, name, address, city, province, timezone, accent_color = '#000000', accessibility_description = null, description = null, image_url = null, image_alt = null } = req.body
+    const { name, address, city, province, color = '#000000', accessibility_description = null, description = null, image = null } = JSON.parse(req.body)
 
     try {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
         }
-        if (!user_id) {
-            return res.status(401).json({ message: `You must be logged in to complete this task`});
+        const session = await getSession({ req });
+        if (!session) {
+            return res.status(404).json({ message: `You must be logged in`})
         }
-        if (!name || !address || !province || !city || !timezone) {
+        if (!name || !address) {
             return res
                 .status(400)
-                .json({ message: '`name`, `address`, `city`, `province`, and `timezone` are all required' })
+                .json({ message: '`name` and `address` are required' })
         } 
         const slug = await generateSlug(name, 'venues');
 
 
         const results = await query(
             `
-                INSERT INTO venues (user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug, image_url, image_alt)
-                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)
+                INSERT INTO venues (user_id, name, address, province, city, description, accent_color, accessibility_description, slug, image_id)
+                VALUES (?, ?, ?, ?, ?, ?, ? , ?, ?, ?)
             `,
-            [user_id, name, address, province, city, timezone, description, accent_color, accessibility_description, slug, image_url, image_alt ]
+            [session.id, name, address, province, city, description, color, accessibility_description, slug, image ]
         )
         return res.json(results)
     } catch (e) {
