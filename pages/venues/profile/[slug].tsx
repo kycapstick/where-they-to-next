@@ -16,6 +16,7 @@ export default function DashboardPage() {
             { entry && entry[0] && !isLoading &&
                 <Profile 
                     entry={entry[0]} 
+                    route="venues"
                 />
             }
             { !isLoading && entry && !entry.length && 

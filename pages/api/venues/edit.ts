@@ -1,24 +1,26 @@
 import { NextApiHandler } from 'next'
 import { query } from '../../../lib/db'
+import { getSession } from 'next-auth/client'
 
 const { verifyUser } = require('../../../scripts/verifyUser');
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, id, name, address, city, province, timezone, accent_color, accessibility_description = null, description = null, image_url = null, image_alt = null } = req.body
+    let { id, digital, name, address, city, province, color, accessibilityDescription = null, description = null, image, socials } = JSON.parse(req.body)
 
     try {
         if (req.method !== 'POST') {
             return res.status(401).json({ message: `This method is not allowed`});
         }
-        if (!id || !name || !address || !province || !city || !timezone) {
+        if (!id || !name || !address) {
             return res
                 .status(400)
-                .json({ message: ' `id`, `name`, `address`, `city`, `province`, and `timezone` are all required' })
+                .json({ message: ' `id`, `name`, and `address` are all required' })
         } 
-        if (!user_id) {
-            return res.status(401).json({ message: `You must be logged in to complete this action`});
+        const session = await getSession({ req });
+        if (!session) {
+            return res.status(404).json({ message: `You must be logged in`})
         }
-        const activeUser = await verifyUser(id, user_id, 'venues');
+        const activeUser = await verifyUser(id, session.id, 'venues');
         if (!activeUser) {
             return res.status(401).json({ message: `You are not authorized to update this entry`});
         }
@@ -26,12 +28,11 @@ const handler: NextApiHandler = async (req, res) => {
         const results = await query(
             `
                 UPDATE venues
-                SET name = ?, address = ?, province = ?, city = ?, timezone = ?, description = ?, accent_color = ?, accessibility_description = ?, image_url = ?, image_alt = ?
+                SET digital = ?, name = ?, address = ?, province = ?, city = ?, description = ?, accent_color = ?, accessibility_description = ?, image_id = ?, social_links_id = ?
                 WHERE id = ?
             `,
-            [name, address, province, city, timezone, description, accent_color, accessibility_description, image_url, image_alt, id ]
+            [digital, name, address, province, city, description, color, accessibilityDescription, image, socials, id ]
         )
-
         return res.json(results)
     } catch (e) {
         res.status(500).json({ message: e.message })

@@ -3,7 +3,7 @@ import Checkbox from "../checkbox"
 import DropDown from "../dropdown"
 import provinces from "../../lib/provinces";
 
-export default function Address({ address, setAddress, digital, setDigital, city, setCity, province, setProvince, postalCode, setPostalCode, checkErrors }) {
+export default function Address({ address, setAddress, digital, setDigital, city, setCity, province, setProvince, checkErrors }) {
     return (
         <div>
             <h2 className="h3 mt-8 text-center">Address</h2>

@@ -37,22 +37,24 @@ export default function Address({ entry }) {
                             type="accessibility"
                         />
                     </div>
-                    {
-                        entry.accessibility && entry.accessibility.length > 0 &&
-                        <ul>
-                            { 
-                                entry.accessibility.map((feature) => {
-                                    return (
-                                        <li className="nth-child-2:mt-1 block" key={`accessibility-${feature.id}`}>{feature.name}</li>
-                                    )
-                                })
-                            }
-                        </ul>
-                    }
-                    {
-                        entry.accessibility_description &&
-                        <p>{entry.accessibility_description}</p>
-                    }
+                    <div>
+                        {
+                            entry.accessibility && entry.accessibility.length > 0 &&
+                            <ul>
+                                { 
+                                    entry.accessibility.map((feature) => {
+                                        return (
+                                            <li className="nth-child-2:mt-1 block" key={`accessibility-${feature.id}`}>{feature.name}</li>
+                                        )
+                                    })
+                                }
+                            </ul>
+                        }
+                        {
+                            entry.accessibility_description &&
+                            <p className="nth-child-2:mt-4"><span className="font-bold">Details:</span> {entry.accessibility_description}</p>
+                        }
+                    </div>
                 </div>
             }
         </div>
