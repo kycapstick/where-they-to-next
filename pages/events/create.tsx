@@ -12,6 +12,7 @@ import Address from '@/components/address';
 import ColorPicker from '@/components/color-picker';
 import Accessibility from '@/components/accessibility';
 import SocialLinks from '@/components/social-links';
+import DatePicker from '@/components/date-picker';
 
 
 export default function CreateEvent() {
@@ -22,13 +23,13 @@ export default function CreateEvent() {
     // families, artists, accessibility, venue 
 
     const router = useRouter();
-
+    const today = new Date();
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ color, setColor ] = useState('#000000');
-    const [ date, setDate ] = useState(new Date());
+    const [ date, setDate ] = useState(``);
     const [ doors, setDoors ] = useState('');
     const [ showTime, setShowTime ] = useState('');
     const [ tickets, setTickets ] = useState('');
@@ -62,9 +63,11 @@ export default function CreateEvent() {
         const result = await resp.json()
         if (result.length > 0) {
             const venue = result[0];
+            console.log(venue);
             setAddress(venue.address);
             setCity(venue.city)
             setProvince(venue.province)
+            setDigital(venue.digital ? venue.digital : false);
             setAccessibilityDescription(venue.accessibility_description)
         }
     }
@@ -74,6 +77,7 @@ export default function CreateEvent() {
         setAddress('')
         setCity('')
         setProvince('');
+        setDigital(false);
         setAccessibilityDescription('');
 
     }
@@ -251,6 +255,10 @@ export default function CreateEvent() {
                                 user_id={session.id ? session.id : null }
                                 image={image}
                                 setImage={ setImage }
+                            />
+                            <DatePicker 
+                                date={date}
+                                setDate={setDate}
                             />
                             <ColorPicker 
                                 value={color}

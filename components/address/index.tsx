@@ -4,7 +4,7 @@ import DropDown from "../dropdown"
 import provinces from "../../lib/provinces";
 import Autocomplete from "../autocomplete";
 
-export default function Address({ address, setAddress, digital, setDigital, city, setCity, province, setProvince, checkErrors, select = false, venue = null, setVenue = null, venueInfo = null, setVenueInfo = null }) {
+export default function Address({ address, setAddress, digital = false, setDigital, city, setCity, province, setProvince, checkErrors, select = false, venue = null, setVenue = null, venueInfo = { name: '', id: null }, setVenueInfo = null }) {
     return ( 
         <div>
             <h2 className="h3 mt-8 text-center">Address</h2>
@@ -14,7 +14,7 @@ export default function Address({ address, setAddress, digital, setDigital, city
                     value={digital}
                     setValue={setDigital}
                     id="digital"
-                    label="This is a digital venue."
+                    label={select ? `This is a digital event.` : `This is a digital venue`}
                 />
                 </div>
             {
@@ -32,7 +32,7 @@ export default function Address({ address, setAddress, digital, setDigital, city
                                 onKeypress={ checkErrors }
                                 disabled={true}
                             />
-                            <button onClick={setVenueInfo}>Clear selection</button>
+                            <button className="underline text-error-400 mt-2"onClick={setVenueInfo}>Clear selection</button>
                         </>
                         : 
                         <Autocomplete 

@@ -13,6 +13,7 @@ module.exports.eventsUp = () => {
                             date TEXT NOT NULL,
                             doors TEXT NULL,
                             description TEXT NULL,
+                            digital BOOLEAN,
                             show_time TEXT NULL,
                             tickets TEXT NULL,
                             tickets_url TEXT NULL,
