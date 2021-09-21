@@ -29,7 +29,6 @@ export default function CreateVenue() {
     const [ digital, setDigital ] = useState(false);
     const [ city, setCity ] = useState('')
     const [ province, setProvince ] = useState('');
-    const [ postalCode, setPostalCode] = useState('');
 
     // Accessibility
     const [ accessibility, setAccessibility ] = useState([]);
@@ -207,8 +206,6 @@ export default function CreateVenue() {
                                 setCity={setCity}
                                 province={province}
                                 setProvince={setProvince}
-                                postalCode={postalCode}
-                                setPostalCode={setPostalCode}
                                 checkErrors={checkErrors}
                             />
                             <ImageUploader 
