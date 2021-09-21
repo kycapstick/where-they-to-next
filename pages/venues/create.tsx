@@ -86,7 +86,6 @@ export default function CreateVenue() {
                 })
                 const result = await response.json();
                 const { insertId } = result;
-                console.log(insertId);
                 if (insertId) {
                     if (accessibility && accessibility.length > 0) {
                         await createAccessibilityRelationships(insertId);

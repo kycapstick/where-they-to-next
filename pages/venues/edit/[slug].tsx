@@ -8,46 +8,85 @@ import Container from '@/components/container'
 import ImageUploader from '@/components/image-uploader';
 import TextInput from '@/components/text-input';
 import Textarea from '@/components/textarea';
-import Autocomplete from '@/components/autocomplete';
 import ColorPicker from '@/components/color-picker';
-import Tips from '@/components/tips-input';
 import SocialLinks from '@/components/social-links';
 import BlockButton from '@/components/buttons/block';
+import Address from '@/components/address';
+import Accessibility from '@/components/accessibility';
 
 
-export default function EditFamilyPage({ family, slug }) {
+export default function EditVenuePage({ venue, slug }) {
     const router = useRouter();
 
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
-    const [ image, setImage ] = useState(family.image || '');
-    const [ name, setName ] = useState(family.name || '');
-    const [ description, setDescription ] = useState(family.description || '');
-    const [ artists, setArtists ] = useState(family.artists || []) 
-    const [ color, setColor ] = useState(family.accent_color || '');
-    const [ tips, setTips ] = useState(family.tips || '');
-    const [ tipsLink, setTipsLink ] = useState(family.tips_link || '');
+    const [ name, setName ] = useState(venue.name);
+    const [ description, setDescription ] = useState(venue.description ? venue.description : '');
+    const [ color, setColor ] = useState(venue.accent_color ? venue.accent_color : '#000000');
+    const [ image, setImage ] = useState(null);
+
+    // Address
+    const [ address, setAddress ] = useState(venue.address);
+    const [ digital, setDigital ] = useState(venue.digital);
+    const [ city, setCity ] = useState(venue.city)
+    const [ province, setProvince ] = useState(venue.province);
+
+
+    // Accessibility
+    const [ accessibility, setAccessibility ] = useState(venue.accessibility && venue.accessibility.length > 0 ? venue.accessibility.map((feature) => feature.id) : []);
+    const [ accessibilityDescription, setAccessibilityDescription ] = useState(venue.accessibility_description ? venue.accessibility_description : '');
 
     // Social Links
-    const [socialLinksId, setSocialLinksId ] = useState(family.social_links_id);
-    const [ facebook, setFacebook ] = useState(family.social_links ? family.social_links.facebook : '');
-    const [ instagram, setInstagram ] = useState(family.social_links ? family.social_links.instagram : '');
-    const [ twitch, setTwitch ] = useState(family.social_links ? family.social_links.twitch : '');
-    const [ twitter, setTwitter ] = useState(family.social_links ? family.social_links.twitter : '');
-    const [ website, setWebsite ] = useState(family.social_links ? family.social_links.website : '');
-    const [ youtube, setYouTube ] = useState(family.social_links ? family.social_links.youtube : '');
-    const updateArtistRelationships = async(artists, route) => {
+    const [socialLinksId, setSocialLinksId ] = useState(venue.social_links_id);
+    const [ facebook, setFacebook ] = useState(venue.social_links ? venue.social_links.facebook : '');
+    const [ instagram, setInstagram ] = useState(venue.social_links ? venue.social_links.instagram : '');
+    const [ twitch, setTwitch ] = useState(venue.social_links ? venue.social_links.twitch : '');
+    const [ twitter, setTwitter ] = useState(venue.social_links ? venue.social_links.twitter : '');
+    const [ website, setWebsite ] = useState(venue.social_links ? venue.social_links.website : '');
+    const [ youtube, setYouTube ] = useState(venue.social_links ? venue.social_links.youtube : '');
+
+    const editVenue = async(socials) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                const response = await fetch(`/api/venues/edit`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: venue.id,
+                        name, 
+                        description,
+                        image: image && image.id ? image.id : null,
+                        color,
+                        socials,
+                        digital,
+                        address,
+                        city, 
+                        province,
+                        accessibilityDescription
+                    })
+                })
+                if (response.status !== 200) {
+                    return reject('Something went wrong')
+                }
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        })
+    }
+
+    const updateAccessibilityRelationships = async(features, route) => {
         return new Promise(async (resolve, reject) => {
             try {
-                await Promise.all(artists.map(async(artist) => {
-                    await fetch(`/api/family_artists/${route}`, {
+                await Promise.all(features.map(async(feature) => {
+                    await fetch(`/api/accessibility_venues/${route}`, {
                         method: 'POST',
                         body: JSON.stringify({
-                            familyId: family.id,
-                            artistId: artist.id,
+                            venueId: venue.id,
+                            accessibilityId: feature,
                         })
                     })
-                    return artist;
+                    return feature;
                 }));
                 return resolve(true);
             } catch (err) {
@@ -57,48 +96,19 @@ export default function EditFamilyPage({ family, slug }) {
         })   
     }
 
-    const handleArtists = () => {
+    const handleAccessibility = () => {
         return new Promise(async(resolve, reject) => {
-            const currentArtistIds = family.artists.map((artist) => artist.id);
-            const newArtistIds = artists.map((artist) => artist.id);
-            const newArtists = artists.filter((artist) => currentArtistIds.indexOf(artist.id) === -1);
-            const removedArtists = family.artists.filter((artist) => newArtistIds.indexOf(artist.id) === -1);
+            const currentFeatureIds = venue.accessibility.map((feature) => feature.id);
+            const newFeatures = accessibility.filter((feature) => currentFeatureIds.indexOf(feature) === -1);
+            const removedFeatures = currentFeatureIds.filter((feature) => accessibility.indexOf(feature) === -1);
             try {
-                if (newArtists && newArtists.length > 0) {
-                    await updateArtistRelationships(newArtists, 'create');
+                if (newFeatures && newFeatures.length > 0) {
+                    await updateAccessibilityRelationships(newFeatures, 'create');
                 }
-                if (removedArtists && removedArtists.length) {
-                    await updateArtistRelationships(removedArtists, 'delete')
+                if (removedFeatures&& removedFeatures.length) {
+                    await updateAccessibilityRelationships(removedFeatures, 'delete')
                 }
                 return resolve(true)
-            } catch(err) {
-                console.log(err);
-                return reject(err);
-            }
-        })
-    }
-
-    const editFamily = async(socials) => {
-        return new Promise(async(resolve, reject) => {
-            try {
-                const response = await fetch(`/api/families/edit`, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: family.id,
-                        name, 
-                        description,
-                        tips,
-                        tipsLink,
-                        image: image && image.id ? image.id : null,
-                        color,
-                        socials
-                    })
-                })
-                if (response.status !== 200) {
-                    return reject('Something went wrong')
-                }
-                await handleArtists()
-                return resolve(true);
             } catch(err) {
                 console.log(err);
                 return reject(err);
@@ -143,8 +153,9 @@ export default function EditFamilyPage({ family, slug }) {
             if (!socialLinksId) {
                 socials = await createSocialLinksId();
             }
-            await editFamily(socials);
-            router.push(`/families/profile/${slug}`)
+            await handleAccessibility();
+            await editVenue(socials);
+            router.push(`/venues/profile/${slug}`)
         } catch(err) {
             console.log(err)
         }
@@ -182,9 +193,9 @@ export default function EditFamilyPage({ family, slug }) {
                         </ul>
                     </>
                 }
-                { session && session.id && session.id === family.user_id ?
+                { session && session.id && session.id === venue.user_id ?
                     <>
-                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Edit <span className="block h1">Family Profile</span></h1>                
+                        <h1 className="w-2/3 mx-auto text-center h1 my-3">Edit <span className="block h1">Venue Profile</span></h1>                
                         <form action="" onSubmit={handleSubmit}>
                             <div className="py-6">
                                 <TextInput 
@@ -201,17 +212,27 @@ export default function EditFamilyPage({ family, slug }) {
                                 value={description}
                                 onChange={setDescription}
                             />
+                            <Address 
+                                digital={digital}
+                                setDigital={setDigital}
+                                address={address}
+                                setAddress={setAddress}
+                                city={city}
+                                setCity={setCity}
+                                province={province}
+                                setProvince={setProvince}
+                                checkErrors={checkErrors}
+                            />
+                             <Accessibility 
+                                features={accessibility}
+                                setFeatures={setAccessibility}
+                                accessibilityDescription={accessibilityDescription}
+                                setAccessibilityDescription={setAccessibilityDescription}
+                            />
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
                                 image={image}
                                 setImage={ setImage }
-                            />
-                            <Autocomplete 
-                                name="artists"
-                                label="Artists"
-                                type="artists"
-                                selections={artists}
-                                makeSelection={setArtists}
                             />
                             <ColorPicker 
                                 value={color}
@@ -219,12 +240,7 @@ export default function EditFamilyPage({ family, slug }) {
                                 errors={errors}
                                 setErrors={setErrors}
                             />
-                            <Tips 
-                                tips={tips}
-                                tipsLink={tipsLink}
-                                setTips={setTips}
-                                setTipsLink={setTipsLink}
-                            />
+                            
                             <SocialLinks 
                                 facebook={facebook}
                                 setFacebook={setFacebook}
@@ -260,13 +276,13 @@ export default function EditFamilyPage({ family, slug }) {
     )
 }
 
-EditFamilyPage.getInitialProps = async ({ query, req }) => {
+EditVenuePage.getInitialProps = async ({ query, req }) => {
     const { slug } = query;
     const { origin } = absoluteUrl(req);
-    const result = await fetch(`${origin}/api/families/single?slug=${slug}`);
+    const result = await fetch(`${origin}/api/venues/single?slug=${slug}`);
     const response = await result.json();
     return {
-        family: response[0],
+        venue: response[0],
         slug,
     }
 }
