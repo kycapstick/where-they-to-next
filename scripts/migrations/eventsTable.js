@@ -20,6 +20,11 @@ module.exports.eventsUp = () => {
                             accessibility_description TEXT NULL,
                             user_id INT NOT NULL,
                             image_id INT NULL,
+                            venue_id INT NULL,
+                            venue_name TEXT NULL,
+                            address TEXT NULL,
+                            city TEXT NULL,
+                            province TEXT NULL,
                             social_links_id INT NULL,
                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                             UNIQUE(slug)
