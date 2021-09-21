@@ -36,7 +36,6 @@ export default function EditFamilyPage({ family, slug }) {
     const [ twitter, setTwitter ] = useState(family.social_links ? family.social_links.twitter : '');
     const [ website, setWebsite ] = useState(family.social_links ? family.social_links.website : '');
     const [ youtube, setYouTube ] = useState(family.social_links ? family.social_links.youtube : '');
-    console.log(socialLinksId);
     const updateArtistRelationships = async(artists, route) => {
         return new Promise(async (resolve, reject) => {
             try {

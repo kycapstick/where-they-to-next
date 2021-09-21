@@ -19,7 +19,6 @@ const handler: NextApiHandler = async (req, res) => {
         if (!session) {
             return res.status(404).json({ message: `You must be logged in`})
         }
-        console.log(session);
         const activeUser = await verifyUser(venueId, session.id, 'venues');
         if (!activeUser) {
             return res.status(401).json({ message: `You are not authorized to update this entry`});

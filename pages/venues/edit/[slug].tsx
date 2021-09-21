@@ -22,7 +22,7 @@ export default function EditVenuePage({ venue, slug }) {
     const [ errors, setErrors ] = useState([]);
     const [ name, setName ] = useState(venue.name);
     const [ description, setDescription ] = useState(venue.description ? venue.description : '');
-    const [ color, setColor ] = useState('#000000');
+    const [ color, setColor ] = useState(venue.accent_color ? venue.accent_color : '#000000');
     const [ image, setImage ] = useState(null);
 
     // Address
@@ -45,7 +45,6 @@ export default function EditVenuePage({ venue, slug }) {
     const [ website, setWebsite ] = useState(venue.social_links ? venue.social_links.website : '');
     const [ youtube, setYouTube ] = useState(venue.social_links ? venue.social_links.youtube : '');
 
-    console.log(venue);
     const editVenue = async(socials) => {
         return new Promise(async(resolve, reject) => {
             try {
@@ -80,8 +79,6 @@ export default function EditVenuePage({ venue, slug }) {
         return new Promise(async (resolve, reject) => {
             try {
                 await Promise.all(features.map(async(feature) => {
-                    console.log(feature);
-                    return;
                     await fetch(`/api/accessibility_venues/${route}`, {
                         method: 'POST',
                         body: JSON.stringify({
@@ -104,8 +101,6 @@ export default function EditVenuePage({ venue, slug }) {
             const currentFeatureIds = venue.accessibility.map((feature) => feature.id);
             const newFeatures = accessibility.filter((feature) => currentFeatureIds.indexOf(feature) === -1);
             const removedFeatures = currentFeatureIds.filter((feature) => accessibility.indexOf(feature) === -1);
-            console.log(newFeatures);
-            console.log(removedFeatures);
             try {
                 if (newFeatures && newFeatures.length > 0) {
                     await updateAccessibilityRelationships(newFeatures, 'create');
