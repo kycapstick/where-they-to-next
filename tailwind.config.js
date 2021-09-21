@@ -9,6 +9,7 @@ module.exports = {
     theme: {
         flex: {
             half: '0 0 calc(50% - 16px)', 
+            'one-third': '0 0 calc((100% / 3) - 32px)',
         },
         extend: {
             colors: {

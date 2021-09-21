@@ -30,6 +30,8 @@ export default function CreateEvent() {
     const [ description, setDescription ] = useState('');
     const [ color, setColor ] = useState('#000000');
     const [ date, setDate ] = useState(``);
+    const [ month, setMonth ] = useState('');
+    const [ year, setYear ] = useState('');
     const [ doors, setDoors ] = useState('');
     const [ showTime, setShowTime ] = useState('');
     const [ tickets, setTickets ] = useState('');
@@ -259,6 +261,14 @@ export default function CreateEvent() {
                             <DatePicker 
                                 date={date}
                                 setDate={setDate}
+                                month={month}
+                                setMonth={setMonth}
+                                year={year}
+                                setYear={setYear}
+                                doors={doors}
+                                setDoors={setDoors}
+                                showTime={showTime}
+                                setShowTime={setShowTime}
                             />
                             <ColorPicker 
                                 value={color}
