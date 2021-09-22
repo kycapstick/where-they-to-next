@@ -29,7 +29,7 @@ export default function Accessibility({ features, setFeatures, accessibilityDesc
                                             id={`feature-${accFeature.id}`}
                                             name={accFeature.name}
                                             label={accFeature.name}
-                                            value={features.indexOf(accFeature.id) !== -1}
+                                            value={features.indexOf(Number(accFeature.id)) !== -1}
                                             setValue={handleChange}
                                         />
                                     </li>

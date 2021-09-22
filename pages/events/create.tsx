@@ -13,36 +13,38 @@ import ColorPicker from '@/components/color-picker';
 import Accessibility from '@/components/accessibility';
 import SocialLinks from '@/components/social-links';
 import DatePicker from '@/components/date-picker';
+import TextareaInput from '@/components/textarea';
+import Autocomplete from '@/components/autocomplete';
 
 
 export default function CreateEvent() {
-    // FIELDS
-    // name, description, date, doors, show_time, accent_color
-    // tickets, tickets_url  
-    // PIVOT FIELDS 
-    // families, artists, accessibility, venue 
-
     const router = useRouter();
     const today = new Date();
+
     const [ session, loading ] = useSession();
     const [ errors, setErrors ] = useState([]);
+
     const [ name, setName ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ color, setColor ] = useState('#000000');
     const [ date, setDate ] = useState(``);
     const [ month, setMonth ] = useState('');
-    const [ year, setYear ] = useState('');
+    const [ year, setYear ] = useState(today.getFullYear());
     const [ doors, setDoors ] = useState('');
     const [ showTime, setShowTime ] = useState('');
     const [ tickets, setTickets ] = useState('');
     const [ ticketsUrl, setTicketsUrl ] = useState('');
     const [ venue, setVenue ] = useState([]);
     const [ venueInfo, setVenueInfo ] = useState({ name: '', id: null});
+
+    // PIVOT TABLES
     const [ image, setImage ] = useState(null);
+    const [ artists, setArtists ] = useState([]);
+    const [ families, setFamilies ] = useState([]);
 
     // Address
-    const [ address, setAddress ] = useState('');
     const [ digital, setDigital ] = useState(false);
+    const [ address, setAddress ] = useState('');
     const [ city, setCity ] = useState('')
     const [ province, setProvince ] = useState('');
 
@@ -61,16 +63,21 @@ export default function CreateEvent() {
 
     const handleVenue = async(selection) => {
         setVenueInfo(selection[0])
+        console.log(selection);
         const resp = await fetch(`/api/venues/single?slug=${selection[0].slug}`);
         const result = await resp.json()
         if (result.length > 0) {
             const venue = result[0];
-            console.log(venue);
             setAddress(venue.address);
             setCity(venue.city)
             setProvince(venue.province)
             setDigital(venue.digital ? venue.digital : false);
-            setAccessibilityDescription(venue.accessibility_description)
+            if (venue.accessibility && venue.accessibility.length > 0) {
+                const features = venue.accessibility.map((feature) => feature.id);
+                setAccessibility(features);
+            }
+            setAccessibilityDescription(venue.accessibility_description ? venue.accessibility_description : '')
+     
         }
     }
 
@@ -104,6 +111,27 @@ export default function CreateEvent() {
             }
         });
     }
+    const createRelationships = async(eventId, fields, route) => {
+        return new Promise(async(resolve, reject) => {
+            try {
+                await Promise.all(fields.map(async(field) => {
+                    const response = await fetch(`/api/${route}/create`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            eventId,
+                            id: field?.id ? field.id : field,
+                        })
+                    })
+                    const result = await response.json();
+                    return field;
+                }))
+                return resolve(true);
+            } catch(err) {
+                console.log(err);
+                return reject(err);
+            }
+        });
+    }
 
     const createEvent = async(socials) => {
         return new Promise(async(resolve, reject) => {
@@ -113,13 +141,19 @@ export default function CreateEvent() {
                     body: JSON.stringify({
                         name, 
                         description,
+                        date: `${year}-${month}-${date}`, 
+                        doors,
+                        showTime,
+                        tickets,
+                        ticketsUrl,
+                        digital,
+                        venueName: venueInfo?.name ? venueInfo.name : venue[0],
+                        address,
+                        city,
+                        province,
                         image: image && image.id ? image.id : null,
                         color,
                         socials,
-                        digital,
-                        address,
-                        city, 
-                        province,
                         accessibilityDescription
                     })
                 })
@@ -128,6 +162,13 @@ export default function CreateEvent() {
                 if (insertId) {
                     if (accessibility && accessibility.length > 0) {
                         await createAccessibilityRelationships(insertId);
+                        await createRelationships(insertId, families, 'events_families');
+                        await createRelationships(insertId, artists, 'artists_events');
+                        if (venueInfo?.id) {
+                            await createRelationships(insertId, [venueInfo.id], 'events_venues');
+                        } else if (venue.length > 0) {
+                            await createRelationships(insertId, venue, 'events_venues');
+                        }
                     }
 
                 }
@@ -187,7 +228,8 @@ export default function CreateEvent() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const requiredFields = [{name: 'name', value: name }, { name: 'address', value: address }];
+        console.log(venueInfo);
+        const requiredFields = [{name: 'name', value: name }, { name: 'venue', value: venueInfo?.name ? venueInfo.name : venue[0] }, { name: 'year', value: year }, { name: 'month', value: month }, { name: 'date', value: date }];
         const checkedFields = requiredFields.filter((field) => !field.value || field.value === '');
         if (checkedFields.length > 0) {
             return setErrors(checkedFields);
@@ -251,7 +293,8 @@ export default function CreateEvent() {
                                 venue={venue}
                                 setVenue={handleVenue}
                                 venueInfo={venueInfo}
-                                setVenueInfo={handleVenueClear}
+                                setVenueInfo={setVenueInfo}
+                                handleVenueClear={handleVenueClear}
                             />
                             <ImageUploader 
                                 user_id={session.id ? session.id : null }
@@ -269,6 +312,33 @@ export default function CreateEvent() {
                                 setDoors={setDoors}
                                 showTime={showTime}
                                 setShowTime={setShowTime}
+                            />
+                            <Autocomplete 
+                                name="families"
+                                label="Family/Families"
+                                type="families"
+                                selections={families}
+                                makeSelection={setFamilies}
+                            />
+                            <Autocomplete 
+                                name="artists"
+                                label="Artists"
+                                type="artists"
+                                selections={artists}
+                                makeSelection={setArtists}
+                            />
+                            <h2 className="h3 text-center">Tickets</h2>
+                            <TextareaInput 
+                                name="tickets"
+                                label="Ticket Information"
+                                value={tickets}
+                                onChange={setTickets}
+                            />
+                            <TextInput 
+                                name="tickets-url"
+                                label="Tickets Link"
+                                value={ticketsUrl}
+                                onChange={setTicketsUrl}
                             />
                             <ColorPicker 
                                 value={color}

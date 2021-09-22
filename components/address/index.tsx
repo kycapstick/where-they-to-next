@@ -4,7 +4,8 @@ import DropDown from "../dropdown"
 import provinces from "../../lib/provinces";
 import Autocomplete from "../autocomplete";
 
-export default function Address({ address, setAddress, digital = false, setDigital, city, setCity, province, setProvince, checkErrors, select = false, venue = null, setVenue = null, venueInfo = { name: '', id: null }, setVenueInfo = null }) {
+export default function Address({ address, setAddress, digital = false, setDigital, city, setCity, province, setProvince, checkErrors, select = false, venue = null, setVenue = null, venueInfo = { name: '', id: null }, setVenueInfo = null, handleVenueClear = null }) {
+    console.log(venueInfo)
     return ( 
         <div>
             <h2 className="h3 mt-8 text-center">Address</h2>
@@ -21,7 +22,7 @@ export default function Address({ address, setAddress, digital = false, setDigit
                 select && 
                 <>
                     { 
-                    venueInfo?.name
+                    venueInfo?.id
                         ? 
                         <>
                             <TextInput 
@@ -32,7 +33,7 @@ export default function Address({ address, setAddress, digital = false, setDigit
                                 onKeypress={ checkErrors }
                                 disabled={true}
                             />
-                            <button className="underline text-error-400 mt-2"onClick={setVenueInfo}>Clear selection</button>
+                            <button className="underline text-error-400 mt-2"onClick={handleVenueClear}>Clear selection</button>
                         </>
                         : 
                         <Autocomplete 
@@ -41,6 +42,7 @@ export default function Address({ address, setAddress, digital = false, setDigit
                             type="venues"
                             selections={venue}
                             makeSelection={setVenue}
+                            onKeypress={(e) => { setVenueInfo({ name: e.target.value, id: null })}}
                         />
                     }
                 </>

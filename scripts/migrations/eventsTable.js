@@ -10,7 +10,7 @@ module.exports.eventsUp = () => {
                             created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated DATETIME on UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             name TEXT NOT NULL,
-                            date TEXT NOT NULL,
+                            date DATE NOT NULL,
                             doors TEXT NULL,
                             description TEXT NULL,
                             digital BOOLEAN,

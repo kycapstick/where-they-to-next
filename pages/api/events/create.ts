@@ -1,29 +1,48 @@
 import { NextApiHandler } from 'next'
 import { generateSlug, query } from '../../../lib/db'
+import { getSession } from 'next-auth/client'
 
 const handler: NextApiHandler = async (req, res) => {
-    let { user_id, name, date, show_time, description = null, tickets = null, tickets_url = null, accent_color = null, accessibility_description = null, image_url = null, image_alt = null } = req.body;
+    let { 
+        name, 
+        description,
+        date, 
+        doors,
+        showTime,
+        tickets,
+        ticketsUrl,
+        digital,
+        venueName,
+        address,
+        city,
+        province,
+        image,
+        color,
+        socials,
+        accessibilityDescription 
+    } = JSON.parse(req.body);
     try {
         if (req.method !== 'POST') {
             return res.status(400).json({ message: `This method is not allowed.`})
         }
-        if (!user_id) {
-            return res.status(401).json({ message: `You must be logged in to complete this task`});
+        const session = await getSession({ req });
+        if (!session) {
+            return res.status(401).json({ message: `You must be logged in`})
         }
-        if (!name || !date || !show_time ) {
+        if (!name || !date ) {
             return res
                 .status(400)
-                .json({ message: '`name`, `show_time`, and `date` are required' })
+                .json({ message: '`name` and `date` are required' })
         } 
 
         const slug = await generateSlug(name, 'events');
 
             const results = await query(
             `
-                INSERT INTO events (user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug, image_alt, image_url)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO events (user_id, slug, name, description, date, doors, show_time, tickets, tickets_url, digital, venue_name, address, city, province, image_id, accent_color, social_links_id, accessibility_description )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `,
-            [user_id, name, date, show_time, description, tickets, tickets_url, accent_color, accessibility_description, slug, image_alt, image_url]
+            [ session.id, slug, name, description, date, doors, showTime, tickets, ticketsUrl, digital, venueName, address, city, province, image, color, socials, accessibilityDescription ]
         )
         return res.json(results)
     } catch (e) {
