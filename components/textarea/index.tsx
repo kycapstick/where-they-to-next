@@ -16,7 +16,7 @@ export default function TextareaInput({ name, label, value, onChange, helperText
             >
             </textarea>
             {
-                helperText && !error && <p>{ helperText }</p>
+                helperText && !error && <p className="italic px-4 mt-2">{ helperText }</p>
             }
             { 
                 error && <p className="text-red">This field is required.</p>

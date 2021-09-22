@@ -49,7 +49,7 @@ function Autocomplete({
         if (selections.filter((selection) => selection.id === e.target.dataset.id ).length > 0) {
             return;
         }
-        makeSelection([...selections, { name: e.target.dataset.name, id: e.target.dataset.id}]);
+        makeSelection([...selections, { name: e.target.dataset.name, id: e.target.dataset.id, slug: e.target.dataset.slug }]);
         setOptions([]);
         setValue('');
     }
@@ -91,7 +91,7 @@ function Autocomplete({
             <div className="relative">
                 <ul className="absolute inset-0">
                     { options.length > 0 && options.map((option) => (
-                        <li className={`${active ? 'block' : 'hidden'} paragraph border border-grey-50 border-t-0 bg-white`} key={option.id}><a className="block w-full py-2 px-4  bg-white hover:bg-grey-10" data-id={option.id} data-name={option.name}  onMouseDown={handleSelection} href='#'>{option.name}</a></li>
+                        <li className={`${active ? 'block' : 'hidden'} paragraph border border-grey-50 border-t-0 bg-white`} key={option.id}><a className="block w-full py-2 px-4  bg-white hover:bg-grey-10" data-id={option.id} data-name={option.name} data-slug={option.slug} onMouseDown={handleSelection} href='#'>{option.name}</a></li>
                     ))}
                 </ul>
             </div>
